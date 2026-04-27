@@ -3,5 +3,5 @@ ignoredBuiltDependencies:
   - unrs-resolver
 onlyBuiltDependencies:
   - "@prisma/engines@7.7.0"
-  - msw
+  - "msw@2.13.6"
   - prisma
