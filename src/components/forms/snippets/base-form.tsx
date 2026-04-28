@@ -40,7 +40,10 @@ export default function SnippetBaseForm({
       </Field>
       <Field data-invalid={state.errors?.properties?.language ? true : false}>
         <FieldLabel htmlFor="language">Language</FieldLabel>
-        <Select name="language" defaultValue={state.data?.language}>
+        <Select
+          name="language"
+          defaultValue={state.data?.language?.toLowerCase()}
+        >
           <SelectTrigger
             className="w-full"
             aria-invalid={state.errors?.properties?.language ? true : false}

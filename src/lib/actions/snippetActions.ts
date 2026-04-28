@@ -10,16 +10,30 @@ import { CreateForm } from "@/components/forms/snippets/create-form";
 import { UpdateForm } from "@/components/forms/snippets/edit-form";
 import { appRoutes } from "@/utils/routes";
 
-export async function getAllSnippets(page: number, sortBy: string) {
+export async function getAllSnippets(
+  page: number,
+  sortBy: string,
+  title?: string,
+) {
+  const length = Math.ceil(
+    (await prisma.snippet.count({
+      where: { title: { contains: title, mode: "insensitive" } },
+    })) / 6,
+  );
+
+  if (length > 1 && (page < 1 || page > length))
+    redirect(appRoutes.snippets.list);
+
   const snippets = await prisma.snippet.findMany({
     take: 6,
     skip: (page - 1) * 6 || 0,
     orderBy: {
       updatedAt: sortBy === "asc" ? "asc" : "desc",
     },
+    where: { title: { contains: title, mode: "insensitive" } },
   });
 
-  return snippets;
+  return { snippets, length };
 }
 
 export async function getSnippet(id: string) {

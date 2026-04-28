@@ -7,7 +7,7 @@ export default function MainContent({ children }: { children: ReactNode }) {
   return (
     <main className="w-full">
       <AppHeader />
-      <ScrollArea className="h-[calc(100%-3.3rem)] py-2 px-4">
+      <ScrollArea className="h-[calc(100%-4.3rem)] *:*:block!">
         {children}
       </ScrollArea>
       <Toaster />

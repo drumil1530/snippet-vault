@@ -11,7 +11,7 @@ export default async function EditSnippetPage(
   if (!snippetData) notFound();
 
   return (
-    <div className="p-1">
+    <div className="p-4">
       <SnippetUpdateForm id={id} snippetData={snippetData} />
     </div>
   );

@@ -9,7 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 function SnippetSkeletonCard() {
   return (
-    <Card className="w-full">
+    <Card className="w-full grow">
       <CardHeader className="gap-2">
         <Skeleton className="h-6 w-full" />
         <Skeleton className="h-4 w-20" />
@@ -29,7 +29,7 @@ function SnippetSkeletonCard() {
 export function SnippetsListSkeleton() {
   return (
     <>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
+      <div className="flex flex-wrap gap-2">
         <SnippetSkeletonCard />
         <SnippetSkeletonCard />
         <SnippetSkeletonCard />

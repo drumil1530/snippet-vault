@@ -4,10 +4,10 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 export default function AppHeader() {
   return (
-    <header className="flex justify-between items-center p-2 w-full shadow">
+    <header className="flex justify-between items-center bg-sidebar sticky z-10 top-0 left-0 p-2 mb-2 w-full shadow">
       <Tooltip>
         <TooltipTrigger asChild>
-          <SidebarTrigger size={"lg"} />
+          <SidebarTrigger size="lg" />
         </TooltipTrigger>
         <TooltipContent side="right">
           <Kbd>Ctrl</Kbd>
