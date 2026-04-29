@@ -6,46 +6,68 @@ import { State } from "../types/utilities";
 import { snippetBaseSchema } from "../schemas/snippetSchemas";
 import { z } from "zod";
 import { redirect } from "next/navigation";
-import { CreateForm } from "@/components/forms/snippets/create-form";
-import { UpdateForm } from "@/components/forms/snippets/edit-form";
 import { appRoutes } from "@/utils/routes";
+import { SnippetForm } from "@/components/forms/snippets/base-form";
+import {
+  SnippetWhereInput,
+  SortOrder,
+} from "@/generated/prisma/internal/prismaNamespaceBrowser";
 
-export async function getAllSnippets(
-  page: number,
-  sortBy: string,
-  title?: string,
-) {
+export type SnippetWithLanguage = NonNullable<
+  Awaited<ReturnType<typeof getSnippet>>
+>;
+
+export type SnippetFilters = {
+  page: number;
+  sortBy: SortOrder;
+  items: number;
+  title?: string;
+  language?: string;
+};
+
+export async function getAllSnippets(filters: SnippetFilters) {
+  const { page, sortBy, items, title, language } = filters;
+
+  const whereInput = {
+    ...(title && { title: { contains: title, mode: "insensitive" } }),
+    ...(language && {
+      language: { name: { equals: language, mode: "insensitive" } },
+    }),
+  } satisfies SnippetWhereInput;
+
   const length = Math.ceil(
-    (await prisma.snippet.count({
-      where: { title: { contains: title, mode: "insensitive" } },
-    })) / 6,
+    (await prisma.snippet.count({ where: whereInput })) / items,
   );
 
   if (length > 1 && (page < 1 || page > length))
     redirect(appRoutes.snippets.list);
 
   const snippets = await prisma.snippet.findMany({
-    take: 6,
-    skip: (page - 1) * 6 || 0,
+    take: items,
+    skip: (page - 1) * items || 0,
     orderBy: {
-      updatedAt: sortBy === "asc" ? "asc" : "desc",
+      updatedAt: sortBy,
     },
-    where: { title: { contains: title, mode: "insensitive" } },
+    where: whereInput,
+    include: { language: true },
   });
 
   return { snippets, length };
 }
 
 export async function getSnippet(id: string) {
-  const snippet = await prisma.snippet.findUnique({ where: { id } });
+  const snippet = await prisma.snippet.findUnique({
+    where: { id },
+    include: { language: true },
+  });
 
   return snippet;
 }
 
 export async function createNewSnippet(
-  _prevState: State<CreateForm>,
+  _prevState: State<SnippetForm>,
   formData: FormData,
-): Promise<State<CreateForm>> {
+): Promise<State<SnippetForm>> {
   const parsedData = getFormData(formData);
 
   const result = snippetBaseSchema.safeParse(parsedData);
@@ -64,9 +86,9 @@ export async function createNewSnippet(
 
 export async function updateNewSnippet(
   id: string,
-  _prevState: State<UpdateForm>,
+  _prevState: State<SnippetForm>,
   formData: FormData,
-): Promise<State<UpdateForm>> {
+): Promise<State<SnippetForm>> {
   const parsedData = getFormData(formData);
 
   const result = snippetBaseSchema.safeParse(parsedData);

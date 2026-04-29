@@ -24,7 +24,7 @@ export default async function SnippetDetail({ id }: { id: string }) {
     <Card>
       <CardHeader>
         <CardTitle>{snippet.title}</CardTitle>
-        <CardDescription>{snippet.language}</CardDescription>
+        <CardDescription>{snippet.language.name}</CardDescription>
       </CardHeader>
       <Separator />
       <CardContent className="min-h-32 relative">

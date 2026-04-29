@@ -1,3 +1,5 @@
+"use client";
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,6 +13,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { deleteSnippet } from "@/lib/actions/snippetActions";
+import { toast } from "sonner";
 
 export default function DeleteSnippetButton({ id }: { id: string }) {
   const formAction = deleteSnippet.bind(null, id);
@@ -33,7 +36,15 @@ export default function DeleteSnippetButton({ id }: { id: string }) {
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <form action={formAction}>
-            <AlertDialogAction type="submit" variant="destructive">
+            <AlertDialogAction
+              type="submit"
+              variant="destructive"
+              onClick={() =>
+                toast.success("Snippet deleted successfully!", {
+                  position: "top-center",
+                })
+              }
+            >
               Confirm
             </AlertDialogAction>
           </form>

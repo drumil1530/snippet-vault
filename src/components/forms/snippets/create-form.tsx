@@ -1,22 +1,28 @@
 "use client";
 
 import { createNewSnippet } from "@/lib/actions/snippetActions";
-import SnippetBaseForm from "./base-form";
+import SnippetBaseForm, { SnippetForm } from "./base-form";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { State } from "@/lib/types/utilities";
 import { useActionState } from "react";
 import Link from "next/link";
 import { appRoutes } from "@/utils/routes";
+import { Language } from "@/generated/prisma/client";
 
-export default function SnippetCreateForm() {
-  const initialState: State<CreateForm> = {};
+export default function SnippetCreateForm({
+  languages,
+}: {
+  languages: Language[];
+}) {
+  const initialState: State<SnippetForm> = {};
   const [state, formAction, isPending] = useActionState(
     createNewSnippet,
     initialState,
   );
+
   return (
     <form action={formAction}>
-      <SnippetBaseForm state={state} />
+      <SnippetBaseForm state={state} languages={languages} />
       <div className="mt-2">
         <Link
           href={appRoutes.snippets.list}
@@ -30,10 +36,4 @@ export default function SnippetCreateForm() {
       </div>
     </form>
   );
-}
-
-export interface CreateForm {
-  title?: string;
-  code?: string;
-  language?: string;
 }

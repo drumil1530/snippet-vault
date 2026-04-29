@@ -1,4 +1,8 @@
-import { getAllSnippets } from "@/lib/actions/snippetActions";
+import {
+  getAllSnippets,
+  SnippetFilters,
+  SnippetWithLanguage,
+} from "@/lib/actions/snippetActions";
 import {
   Card,
   CardContent,
@@ -21,66 +25,74 @@ import { appRoutes } from "@/utils/routes";
 import { Separator } from "@/components/ui/separator";
 import { UrlObject } from "node:url";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import ItemsButtonDropdown from "../list-page-items-button";
+import { ParsedUrlQueryInput } from "node:querystring";
 
 export default async function SnippetsList({
   searchParams,
 }: {
   searchParams: Record<string, string | string[] | undefined>;
 }) {
-  const page = Number.parseInt(String(searchParams["page"] || "1"));
-  const sortBy = String(searchParams["sortby"] || "desc");
-  const title = String(searchParams["title"] || "");
+  const filters = {
+    page: Number.parseInt(searchParams["page"]?.toString() || "1"),
+    sortBy: String(searchParams["sortby"]) === "asc" ? "asc" : "desc",
+    title: searchParams["title"]?.toString(),
+    items: Number.parseInt(searchParams["items"]?.toString() || "6"),
+    language: searchParams["language"]?.toString(),
+  } satisfies SnippetFilters;
 
-  const { snippets, length } = await getAllSnippets(page, sortBy, title);
+  const { snippets, length } = await getAllSnippets(filters);
 
   return (
     <>
       {length > 0 ? (
         <>
           <SnippetListRender snippets={snippets} />
-          <SnippetPagination
-            page={page}
-            sortBy={sortBy}
-            length={length}
-            title={title}
-          />
+          <div className="flex justify-between items-center mt-4 mb-2">
+            <ItemsButtonDropdown pageItems={filters.items} />
+            <SnippetPagination
+              page={filters.page}
+              sortBy={filters.sortBy}
+              length={length}
+              items={filters.items}
+              title={filters.title}
+              language={filters.language}
+            />
+          </div>
         </>
       ) : (
         <p className="text-xl">
-          No snippets found containing the title: {title}
+          {filters.title &&
+            !filters.language &&
+            `No snippets found containing the title: ${filters.title}`}
+          {filters.language &&
+            !filters.title &&
+            `No snippets found for the language: ${filters.language}`}
+          {filters.title &&
+            filters.language &&
+            `No snippets found for the language (${filters.language}) having title "${filters.title}"`}
         </p>
       )}
     </>
   );
 }
 
-function SnippetListRender({
-  snippets,
-}: {
-  snippets: {
-    title: string;
-    id: string;
-    code: string;
-    language: string;
-    createdAt: Date;
-    updatedAt: Date;
-  }[];
-}) {
+function SnippetListRender({ snippets }: { snippets: SnippetWithLanguage[] }) {
   return (
-    <div className="flex flex-wrap *:min-w-3xs md:*:min-w-1/4 gap-2">
+    <div className="grid gap-3 grid-cols-[repeat(auto-fit,minmax(20rem,1fr))]">
       {snippets.map((snippet) => (
-        <Card key={snippet.id} className="gap-3 grow">
+        <Card key={snippet.id} className="gap-3">
           <CardHeader>
             <CardTitle>{snippet.title}</CardTitle>
-            <CardDescription>{snippet.language}</CardDescription>
+            <CardDescription>{snippet.language.name}</CardDescription>
           </CardHeader>
           <Separator />
-          <CardContent className="h-30 max-h-30 truncate">
-            <pre>
+          <CardContent className="h-32 max-h-32 overflow-hidden">
+            <pre className="text-sm leading-tight">
               <code>{snippet.code}</code>
             </pre>
           </CardContent>
-          <CardFooter className="gap-1 p-1 justify-end">
+          <CardFooter className="p-2 justify-end">
             <Link
               href={appRoutes.snippets.details(snippet.id)}
               className={buttonVariants({ variant: "ghost" })}
@@ -94,58 +106,65 @@ function SnippetListRender({
   );
 }
 
-function SnippetPagination({
-  page,
-  sortBy,
-  length,
-  title,
-}: {
-  page: number;
-  sortBy: string;
-  length: number;
-  title: string;
-}) {
-  const queryInputs: Record<string, string> = { sortBy };
+function SnippetPagination(filters: SnippetFilters & { length: number }) {
+  const { page, sortBy, items, title, language, length } = filters;
 
-  if (title) queryInputs["title"] = title;
+  const queryInputs = {
+    ...(sortBy !== "desc" && { sortBy }),
+    ...(title && { title }),
+    ...(language && { language }),
+    ...(items !== 6 && { items }),
+  } satisfies ParsedUrlQueryInput;
 
-  const previousPage = (pageNumber: number) =>
+  const goToPage = (pageNumber: number) =>
     ({
       pathname: appRoutes.snippets.list,
-      query: { page: page - pageNumber, ...queryInputs },
+      query: { page: pageNumber, ...queryInputs },
     }) satisfies UrlObject;
 
-  const nextPage = (pageNumber: number) =>
-    ({
-      pathname: appRoutes.snippets.list,
-      query: { page: page + pageNumber, ...queryInputs },
-    }) satisfies UrlObject;
+  const PreviousPageLink =
+    page > 1 ? (
+      <PaginationPrevious
+        href={page > 1 ? goToPage(page - 1) : "#"}
+        aria-disabled={page <= 1}
+      />
+    ) : (
+      <Button variant="ghost" disabled>
+        <ChevronLeftIcon data-icon="inline-start" />
+        <span className="hidden sm:block">Previous</span>
+      </Button>
+    );
+
+  const NextPageLink =
+    page < length ? (
+      <PaginationNext
+        href={page < length ? goToPage(page + 1) : "#"}
+        aria-disabled={page >= length}
+      />
+    ) : (
+      <Button variant="ghost" disabled>
+        <span className="hidden sm:block">Next</span>
+        <ChevronRightIcon data-icon="inline-end" />
+      </Button>
+    );
 
   return (
-    <Pagination className="mb-2 mt-4">
+    <Pagination className="w-auto m-0">
       <PaginationContent>
+        <PaginationItem>{PreviousPageLink}</PaginationItem>
         <PaginationItem>
-          {page > 1 ? (
-            <PaginationPrevious
-              href={page > 1 ? previousPage(1) : "#"}
-              aria-disabled={page <= 1}
-            />
-          ) : (
-            <Button variant="ghost" disabled>
-              <ChevronLeftIcon data-icon="inline-start" />
-              <span className="hidden sm:block">Previous</span>
-            </Button>
-          )}
-        </PaginationItem>
-        <PaginationItem>
-          {/* Third last Page link when page last */}
+          {/* Third last Page link when on last page */}
           {page - 2 > 0 && page === length && (
-            <PaginationLink href={previousPage(2)}>{page - 2}</PaginationLink>
+            <PaginationLink href={goToPage(page - 2)}>
+              {page - 2}
+            </PaginationLink>
           )}
 
           {/* Previous Page link when page is not first */}
           {page > 1 && (
-            <PaginationLink href={previousPage(1)}>{page - 1}</PaginationLink>
+            <PaginationLink href={goToPage(page - 1)}>
+              {page - 1}
+            </PaginationLink>
           )}
 
           {/* Current Page link */}
@@ -155,27 +174,19 @@ function SnippetPagination({
 
           {/* Next Page link when page is not last */}
           {page < length && (
-            <PaginationLink href={nextPage(1)}>{page + 1}</PaginationLink>
+            <PaginationLink href={goToPage(page + 1)}>
+              {page + 1}
+            </PaginationLink>
           )}
 
-          {/* Third Page link when page first */}
-          {page + 2 < length && page === 1 && (
-            <PaginationLink href={nextPage(2)}>{page + 2}</PaginationLink>
+          {/* Third Page link when on page first */}
+          {page + 2 <= length && page === 1 && (
+            <PaginationLink href={goToPage(page + 2)}>
+              {page + 2}
+            </PaginationLink>
           )}
         </PaginationItem>
-        <PaginationItem>
-          {page < length ? (
-            <PaginationNext
-              href={page < length ? nextPage(1) : "#"}
-              aria-disabled={page >= length}
-            />
-          ) : (
-            <Button variant="ghost" disabled>
-              <span className="hidden sm:block">Next</span>
-              <ChevronRightIcon data-icon="inline-end" />
-            </Button>
-          )}
-        </PaginationItem>
+        <PaginationItem>{NextPageLink}</PaginationItem>
       </PaginationContent>
     </Pagination>
   );

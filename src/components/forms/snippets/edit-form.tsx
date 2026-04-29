@@ -1,24 +1,27 @@
 "use client";
 
-import { getSnippet, updateNewSnippet } from "@/lib/actions/snippetActions";
-import SnippetBaseForm from "./base-form";
+import { updateNewSnippet } from "@/lib/actions/snippetActions";
+import SnippetBaseForm, { SnippetForm } from "./base-form";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { State } from "@/lib/types/utilities";
 import { useActionState } from "react";
 import Link from "next/link";
 import { appRoutes } from "@/utils/routes";
+import { Language, Snippet } from "@/generated/prisma/client";
 
 export default function SnippetUpdateForm({
   id,
   snippetData,
+  languages,
 }: {
   id: string;
-  snippetData: Awaited<NonNullable<ReturnType<typeof getSnippet>>>;
+  snippetData: Snippet | null;
+  languages: Language[];
 }) {
-  const initialState: State<UpdateForm> = {
+  const initialState: State<SnippetForm> = {
     data: {
       title: snippetData?.title,
-      language: snippetData?.language,
+      languageId: snippetData?.languageId,
       code: snippetData?.code,
     },
   };
@@ -30,7 +33,7 @@ export default function SnippetUpdateForm({
 
   return (
     <form action={formAction}>
-      <SnippetBaseForm state={state} />
+      <SnippetBaseForm state={state} languages={languages} />
       <div className="mt-2 flex gap-1">
         <Link
           href={appRoutes.snippets.details(id)}
@@ -44,10 +47,4 @@ export default function SnippetUpdateForm({
       </div>
     </form>
   );
-}
-
-export interface UpdateForm {
-  title?: string;
-  code?: string;
-  language?: string;
 }
