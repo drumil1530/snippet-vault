@@ -1,8 +1,10 @@
 "use client";
 
-import { updateNewSnippet } from "@/lib/actions/snippetActions";
-import SnippetBaseForm, { SnippetForm } from "./base-form";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { updateNewSnippet } from "@/app/snippets/_actions/update-snippet";
+import SnippetBaseForm, {
+  SnippetForm,
+} from "@/app/snippets/_components/base-form";
+import { Button, buttonVariants } from "@/ui/button";
 import { State } from "@/lib/types/utilities";
 import { useActionState } from "react";
 import Link from "next/link";

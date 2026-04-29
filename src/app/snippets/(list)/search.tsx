@@ -1,17 +1,17 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { ButtonGroup } from "@/components/ui/button-group";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/ui/button";
+import { ButtonGroup } from "@/ui/button-group";
+import { Input } from "@/ui/input";
 import {
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
+  SelectTrigger as Trigger,
+  SelectValue as Value,
+  SelectContent as Content,
+  SelectItem as Item,
   Select,
-  SelectLabel,
-  SelectGroup,
-} from "@/components/ui/select";
+  SelectLabel as Label,
+  SelectGroup as Group,
+} from "@/ui/select";
 import { Language } from "@/generated/prisma/client";
 import { appRoutes } from "@/utils/routes";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -24,6 +24,7 @@ export default function SnippetSearch({
 }) {
   const [searchTitle, setSearchTitle] = useState("");
   const [searchLanguage, setSearchLanguage] = useState("");
+
   const searchParams = useSearchParams();
   const router = useRouter();
   const params = new URLSearchParams(searchParams.toString());
@@ -37,6 +38,7 @@ export default function SnippetSearch({
 
   function handleSubmit(e: SubmitEvent) {
     e.preventDefault();
+
     if (searchTitle) params.set("title", searchTitle);
     else params.delete("title");
 
@@ -61,21 +63,21 @@ export default function SnippetSearch({
             setSearchLanguage(value === "none" ? "" : value)
           }
         >
-          <SelectTrigger className="bg-popover gap-0.5 min-w-30">
-            <SelectValue placeholder="Languages" />
-          </SelectTrigger>
+          <Trigger className="bg-popover gap-0.5 min-w-26">
+            <Value placeholder="Languages" />
+          </Trigger>
 
-          <SelectContent position="popper">
-            <SelectGroup>
-              <SelectLabel>Code Languages</SelectLabel>
-              <SelectItem value="none">None</SelectItem>
+          <Content position="popper">
+            <Group>
+              <Label>Code Languages</Label>
+              <Item value="none">None</Item>
               {languages.map((language) => (
-                <SelectItem key={language.id} value={language.name}>
+                <Item key={language.id} value={language.name}>
                   {language.name}
-                </SelectItem>
+                </Item>
               ))}
-            </SelectGroup>
-          </SelectContent>
+            </Group>
+          </Content>
         </Select>
       </ButtonGroup>
       <Button type="submit" className="cursor-pointer">

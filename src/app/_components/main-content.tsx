@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import AppHeader from "./app-header";
-import { ScrollArea } from "../ui/scroll-area";
-import { Toaster } from "../ui/sonner";
+import { ScrollArea } from "@/ui/scroll-area";
+import { Toaster } from "@/ui/sonner";
 
 export default function MainContent({ children }: { children: ReactNode }) {
   return (

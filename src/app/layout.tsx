@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist_Mono, Nunito_Sans, Montserrat } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/utils/cn";
-import Providers from "@/components/providers";
+import Providers from "@/app/_components/providers";
 
 const montserratHeading = Montserrat({
   subsets: ["latin"],

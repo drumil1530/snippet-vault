@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-
-import { ModeToggle } from "../theme/theme-toggle";
+import { usePathname } from "next/navigation";
+import { ModeToggle } from "./theme/theme-toggle";
 import {
   Sidebar,
   SidebarHeader as Header,
@@ -14,15 +14,14 @@ import {
   SidebarMenu as Menu,
   SidebarMenuItem as MenuItem,
   SidebarMenuButton as MenuButton,
-} from "../ui/sidebar";
-import { Braces, ChevronDown, Code2, Plus, User2 } from "lucide-react";
-import { Button } from "../ui/button";
+} from "@/ui/sidebar";
+import { Braces, ChevronDown, Plus, User2 } from "lucide-react";
+import { Button } from "@/ui/button";
 import {
   CollapsibleTrigger,
   CollapsibleContent,
   Collapsible,
-} from "../ui/collapsible";
-import { usePathname } from "next/navigation";
+} from "@/ui/collapsible";
 import { appRoutes } from "@/utils/routes";
 
 export default function AppSidebar() {

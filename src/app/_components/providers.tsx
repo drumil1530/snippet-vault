@@ -1,11 +1,11 @@
 "use client";
 
-import ThemeProvider from "@/components/theme/theme-provider";
+import ThemeProvider from "@/app/_components/theme/theme-provider";
 import { ReactNode } from "react";
-import AppSidebar from "./layout/app-sidebar";
-import { SidebarProvider } from "./ui/sidebar";
-import { TooltipProvider } from "./ui/tooltip";
-import MainContent from "./layout/main-content";
+import AppSidebar from "./app-sidebar";
+import { SidebarProvider } from "@/ui/sidebar";
+import { TooltipProvider } from "@/ui/tooltip";
+import MainContent from "./main-content";
 
 export default function Providers({ children }: { children: ReactNode }) {
   return (

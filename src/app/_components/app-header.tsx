@@ -1,6 +1,6 @@
-import { Kbd } from "../ui/kbd";
-import { SidebarTrigger } from "../ui/sidebar";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import { Kbd } from "@/ui/kbd";
+import { SidebarTrigger } from "@/ui/sidebar";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/ui/tooltip";
 
 export default function AppHeader() {
   return (

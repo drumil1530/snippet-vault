@@ -1,6 +1,6 @@
-import SnippetUpdateForm from "@/components/forms/snippets/edit-form";
-import { getAllLanguages } from "@/lib/actions/languageActions";
-import { getSnippet } from "@/lib/actions/snippetActions";
+import SnippetUpdateForm from "./form";
+import { getAllLanguages } from "@/app/languages/_actions/get-languages";
+import { getSnippet } from "@/app/snippets/_actions/get-snippets";
 import { notFound } from "next/navigation";
 
 export default async function EditSnippetPage(

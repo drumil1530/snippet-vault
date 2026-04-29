@@ -1,5 +1,5 @@
-import SnippetCreateForm from "@/components/forms/snippets/create-form";
-import { getAllLanguages } from "@/lib/actions/languageActions";
+import SnippetCreateForm from "./form";
+import { getAllLanguages } from "@/app/languages/_actions/get-languages";
 
 export default async function NewSnippetPage() {
   const languages = await getAllLanguages();

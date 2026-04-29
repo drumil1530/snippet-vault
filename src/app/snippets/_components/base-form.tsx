@@ -1,12 +1,7 @@
 "use client";
 
-import {
-  Field,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
+import { Field, FieldError, FieldGroup, FieldLabel } from "@/ui/field";
+import { Input } from "@/ui/input";
 import {
   Select,
   SelectContent,
@@ -15,8 +10,8 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+} from "@/ui/select";
+import { Textarea } from "@/ui/textarea";
 import { Language } from "@/generated/prisma/client";
 import { State } from "@/lib/types/utilities";
 import { useState, useEffect } from "react";
@@ -72,7 +67,7 @@ export default function SnippetBaseForm({
               >
                 <SelectValue placeholder="Select code language">
                   {selectedLanguage?.name}
-                </SelectValue>{" "}
+                </SelectValue>
               </SelectTrigger>
               <SelectContent position="popper">
                 <SelectGroup>

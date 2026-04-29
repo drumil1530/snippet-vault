@@ -1,11 +1,6 @@
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Separator } from "@/components/ui/separator";
+import { Card, CardHeader, CardContent, CardFooter } from "@/ui/card";
+import { Skeleton } from "@/ui/skeleton";
+import { Separator } from "@/ui/separator";
 
 export default function SnippetDetailsPageSkeleton() {
   return (

@@ -1,8 +1,8 @@
-import SnippetsList from "@/components/page-ui/snippets/list-page";
-import SnippetSearch from "@/components/page-ui/snippets/snippet-search";
-import { SnippetsListSkeleton } from "@/components/skeletons/snippet/list-page";
+import SnippetsList from "./list";
+import SnippetSearch from "./search";
+import { SnippetsListSkeleton } from "./skeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getAllLanguages } from "@/lib/actions/languageActions";
+import { getAllLanguages } from "@/app/languages/_actions/get-languages";
 import { Metadata } from "next";
 import { Suspense } from "react";
 
@@ -18,7 +18,7 @@ export default async function SnippetsPage(props: PageProps<"/snippets">) {
   return (
     <div className="px-3">
       <Card className="py-4 rounded-xl border">
-        <CardHeader className="flex justify-between">
+        <CardHeader className="flex justify-between flex-col sm:flex-row gap-2">
           <CardTitle className="text-2xl font-heading">
             Explore Snippets
           </CardTitle>

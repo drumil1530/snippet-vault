@@ -2,7 +2,7 @@ import {
   getAllSnippets,
   SnippetFilters,
   SnippetWithLanguage,
-} from "@/lib/actions/snippetActions";
+} from "../_actions/get-snippets";
 import {
   Card,
   CardContent,
@@ -10,7 +10,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "../../ui/card";
+} from "@/ui/card";
 import {
   Pagination,
   PaginationContent,
@@ -18,14 +18,14 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/pagination";
+} from "@/ui/pagination";
 import Link from "next/link";
-import { Button, buttonVariants } from "../../ui/button";
+import { Button, buttonVariants } from "@/ui/button";
 import { appRoutes } from "@/utils/routes";
-import { Separator } from "@/components/ui/separator";
+import { Separator } from "@/ui/separator";
 import { UrlObject } from "node:url";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
-import ItemsButtonDropdown from "../list-page-items-button";
+import ItemsButtonDropdown from "./items-button";
 import { ParsedUrlQueryInput } from "node:querystring";
 
 export default async function SnippetsList({
@@ -47,7 +47,7 @@ export default async function SnippetsList({
     <>
       {length > 0 ? (
         <>
-          <SnippetListRender snippets={snippets} />
+          <RenderSnippetList snippets={snippets} />
           <div className="flex justify-between items-center mt-4 mb-2">
             <ItemsButtonDropdown pageItems={filters.items} />
             <SnippetPagination
@@ -65,9 +65,11 @@ export default async function SnippetsList({
           {filters.title &&
             !filters.language &&
             `No snippets found containing the title: ${filters.title}`}
+
           {filters.language &&
             !filters.title &&
             `No snippets found for the language: ${filters.language}`}
+
           {filters.title &&
             filters.language &&
             `No snippets found for the language (${filters.language}) having title "${filters.title}"`}
@@ -77,7 +79,7 @@ export default async function SnippetsList({
   );
 }
 
-function SnippetListRender({ snippets }: { snippets: SnippetWithLanguage[] }) {
+function RenderSnippetList({ snippets }: { snippets: SnippetWithLanguage[] }) {
   return (
     <div className="grid gap-3 grid-cols-[repeat(auto-fit,minmax(20rem,1fr))]">
       {snippets.map((snippet) => (

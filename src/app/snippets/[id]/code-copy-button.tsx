@@ -1,12 +1,13 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/ui/button";
 import { Check, Copy } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
 export default function CodeCopyButton({ code }: { code: string }) {
   const [clicked, setClicked] = useState<boolean>(false);
+
   function handleClick() {
     setClicked(true);
     navigator.clipboard.writeText(code);

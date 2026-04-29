@@ -1,4 +1,4 @@
-import { getSnippet } from "@/lib/actions/snippetActions";
+import { getSnippet } from "../_actions/get-snippets";
 import { notFound } from "next/navigation";
 import {
   Card,
@@ -7,13 +7,13 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "../../ui/card";
-import { Separator } from "../../ui/separator";
+} from "@/ui/card";
+import { Separator } from "@/ui/separator";
 import Link from "next/link";
 import { appRoutes } from "@/utils/routes";
-import { buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/ui/button";
 import CodeCopyButton from "./code-copy-button";
-import DeleteSnippetButton from "./delete-snippet-button";
+import DeleteSnippetButton from "./delete-dialog";
 
 export default async function SnippetDetail({ id }: { id: string }) {
   const snippet = await getSnippet(id);

@@ -1,7 +1,7 @@
 "use server";
 
 import { LanguageWhereInput } from "@/generated/prisma/models";
-import prisma from "../prisma-client";
+import prisma from "@/lib/prisma-client";
 
 export async function getAllLanguages() {
   const languages = await prisma.language.findMany({
