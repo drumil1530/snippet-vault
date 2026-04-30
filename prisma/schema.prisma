@@ -16,6 +16,7 @@ model Snippet {
   id         String   @id @default(cuid())
   title      String
   code       String
+  isFavorite Boolean  @default(false)
   languageId String
   language   Language @relation(fields: [languageId], references: [id])
 
@@ -26,10 +27,11 @@ model Snippet {
 }
 
 model Language {
-  id       String    @id @default(cuid())
-  name     String    @unique
-  slug     String
-  snippets Snippet[]
+  id        String    @id @default(cuid())
+  name      String    @unique
+  slug      String
+  shikiLang String
+  snippets  Snippet[]
 
   @@map("languages")
 }

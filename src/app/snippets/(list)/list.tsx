@@ -1,16 +1,5 @@
-import {
-  getAllSnippets,
-  SnippetFilters,
-  SnippetWithLanguage,
-} from "../_actions/get-snippets";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/ui/card";
+import { getAllSnippets, SnippetFilters, SnippetWithLanguage } from "../_actions/get-snippets";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/ui/card";
 import {
   Pagination,
   PaginationContent,
@@ -27,19 +16,28 @@ import { UrlObject } from "node:url";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import ItemsButtonDropdown from "./items-button";
 import { ParsedUrlQueryInput } from "node:querystring";
+import CodeBlock from "../_components/code-block";
+import { Language } from "@/generated/prisma/client";
+import { redirect } from "next/navigation";
 
 export default async function SnippetsList({
   searchParams,
+  languages,
 }: {
   searchParams: Record<string, string | string[] | undefined>;
+  languages: Language[];
 }) {
   const filters = {
     page: Number.parseInt(searchParams["page"]?.toString() || "1"),
     sortBy: String(searchParams["sortby"]) === "asc" ? "asc" : "desc",
     title: searchParams["title"]?.toString(),
     items: Number.parseInt(searchParams["items"]?.toString() || "6"),
-    language: searchParams["language"]?.toString(),
+    language: searchParams["language"]?.toString().toLowerCase(),
   } satisfies SnippetFilters;
+
+  const languagesMap = new Map(languages.map((lang) => [lang.slug, lang.name]));
+
+  if (filters.language && !languagesMap.has(filters.language)) redirect(appRoutes.snippets.list);
 
   const { snippets, length } = await getAllSnippets(filters);
 
@@ -68,11 +66,11 @@ export default async function SnippetsList({
 
           {filters.language &&
             !filters.title &&
-            `No snippets found for the language: ${filters.language}`}
+            `No snippets found for the language: ${languagesMap.get(filters.language)}`}
 
           {filters.title &&
             filters.language &&
-            `No snippets found for the language (${filters.language}) having title "${filters.title}"`}
+            `No snippets found for the language (${languagesMap.get(filters.language)}) having title "${filters.title}"`}
         </p>
       )}
     </>
@@ -83,16 +81,14 @@ function RenderSnippetList({ snippets }: { snippets: SnippetWithLanguage[] }) {
   return (
     <div className="grid gap-3 grid-cols-[repeat(auto-fit,minmax(20rem,1fr))]">
       {snippets.map((snippet) => (
-        <Card key={snippet.id} className="gap-3">
-          <CardHeader>
+        <Card key={snippet.id} className="gap-0 hover:ring-foreground/25">
+          <CardHeader className="flex justify-between items-center">
             <CardTitle>{snippet.title}</CardTitle>
-            <CardDescription>{snippet.language.name}</CardDescription>
+            <CardDescription className="font-mono">{snippet.language.name}</CardDescription>
           </CardHeader>
-          <Separator />
-          <CardContent className="h-32 max-h-32 overflow-hidden">
-            <pre className="text-sm leading-tight">
-              <code>{snippet.code}</code>
-            </pre>
+          <Separator className="mt-3" />
+          <CardContent className="h-42 max-h-42 p-0">
+            <CodeBlock lang={snippet.language.shikiLang}>{snippet.code.slice(0, 150)}</CodeBlock>
           </CardContent>
           <CardFooter className="p-2 justify-end">
             <Link
@@ -126,10 +122,7 @@ function SnippetPagination(filters: SnippetFilters & { length: number }) {
 
   const PreviousPageLink =
     page > 1 ? (
-      <PaginationPrevious
-        href={page > 1 ? goToPage(page - 1) : "#"}
-        aria-disabled={page <= 1}
-      />
+      <PaginationPrevious href={page > 1 ? goToPage(page - 1) : "#"} aria-disabled={page <= 1} />
     ) : (
       <Button variant="ghost" disabled>
         <ChevronLeftIcon data-icon="inline-start" />
@@ -157,17 +150,11 @@ function SnippetPagination(filters: SnippetFilters & { length: number }) {
         <PaginationItem>
           {/* Third last Page link when on last page */}
           {page - 2 > 0 && page === length && (
-            <PaginationLink href={goToPage(page - 2)}>
-              {page - 2}
-            </PaginationLink>
+            <PaginationLink href={goToPage(page - 2)}>{page - 2}</PaginationLink>
           )}
 
           {/* Previous Page link when page is not first */}
-          {page > 1 && (
-            <PaginationLink href={goToPage(page - 1)}>
-              {page - 1}
-            </PaginationLink>
-          )}
+          {page > 1 && <PaginationLink href={goToPage(page - 1)}>{page - 1}</PaginationLink>}
 
           {/* Current Page link */}
           <PaginationLink href="#" isActive aria-disabled="true">
@@ -175,17 +162,11 @@ function SnippetPagination(filters: SnippetFilters & { length: number }) {
           </PaginationLink>
 
           {/* Next Page link when page is not last */}
-          {page < length && (
-            <PaginationLink href={goToPage(page + 1)}>
-              {page + 1}
-            </PaginationLink>
-          )}
+          {page < length && <PaginationLink href={goToPage(page + 1)}>{page + 1}</PaginationLink>}
 
           {/* Third Page link when on page first */}
           {page + 2 <= length && page === 1 && (
-            <PaginationLink href={goToPage(page + 2)}>
-              {page + 2}
-            </PaginationLink>
+            <PaginationLink href={goToPage(page + 2)}>{page + 2}</PaginationLink>
           )}
         </PaginationItem>
         <PaginationItem>{NextPageLink}</PaginationItem>

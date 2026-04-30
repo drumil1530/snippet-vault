@@ -18,9 +18,9 @@ export default function CodeCopyButton({ code }: { code: string }) {
 
   return (
     <Button
-      variant="ghost"
+      variant="secondary"
       size="icon"
-      className="absolute -top-1 right-3"
+      className="absolute top-2 right-2"
       onClick={handleClick}
     >
       {clicked ? (
@@ -28,7 +28,7 @@ export default function CodeCopyButton({ code }: { code: string }) {
       ) : (
         <Copy className="h-[1.2rem] w-[1.2rem]" />
       )}
-      <span className="sr-only">User</span>
+      <span className="sr-only">Copy</span>
     </Button>
   );
 }

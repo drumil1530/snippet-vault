@@ -2,39 +2,47 @@
 
 import { Button } from "@/ui/button";
 import { ButtonGroup } from "@/ui/button-group";
-import { Input } from "@/ui/input";
 import {
-  SelectTrigger as Trigger,
-  SelectValue as Value,
-  SelectContent as Content,
-  SelectItem as Item,
-  Select,
-  SelectLabel as Label,
-  SelectGroup as Group,
-} from "@/ui/select";
+  Combobox,
+  ComboboxContent as Content,
+  ComboboxEmpty as Empty,
+  ComboboxInput,
+  ComboboxItem as Item,
+  ComboboxList as List,
+} from "@/ui/combobox";
 import { Language } from "@/generated/prisma/client";
 import { appRoutes } from "@/utils/routes";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useState, type SubmitEvent } from "react";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "@/ui/input-group";
+import { Search } from "lucide-react";
+import { ComboboxItem } from "@/lib/types/shadcn/combobox";
 
-export default function SnippetSearch({
-  languages,
-}: {
-  languages: Language[];
-}) {
-  const [searchTitle, setSearchTitle] = useState("");
-  const [searchLanguage, setSearchLanguage] = useState("");
-
+export default function SnippetSearch({ languages }: { languages: Language[] }) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const params = new URLSearchParams(searchParams.toString());
 
   const titleParam = searchParams.get("title") || "";
-  const languageParam = searchParams.get("language");
-  const selectedLanguage =
-    languageParam && languages.map((l) => l.name).includes(languageParam)
-      ? languageParam
-      : "";
+  const languageParam = searchParams.get("language")?.toLowerCase();
+  const selectedLanguage = languages.find((l) => l.slug === languageParam);
+
+  const items = languages.map((l) => ({
+    id: l.id,
+    value: l.slug,
+    label: l.name,
+  })) satisfies ComboboxItem[];
+
+  const defaultItemValue = selectedLanguage
+    ? ({
+        id: selectedLanguage.id,
+        label: selectedLanguage.name,
+        value: selectedLanguage.slug,
+      } satisfies ComboboxItem)
+    : null;
+
+  const [searchTitle, setSearchTitle] = useState(titleParam);
+  const [searchLanguage, setSearchLanguage] = useState<ComboboxItem | null>(defaultItemValue);
 
   function handleSubmit(e: SubmitEvent) {
     e.preventDefault();
@@ -42,7 +50,7 @@ export default function SnippetSearch({
     if (searchTitle) params.set("title", searchTitle);
     else params.delete("title");
 
-    if (searchLanguage) params.set("language", searchLanguage);
+    if (searchLanguage) params.set("language", searchLanguage.value);
     else params.delete("language");
 
     router.push(appRoutes.snippets.list + "?" + params.toString());
@@ -51,37 +59,41 @@ export default function SnippetSearch({
   return (
     <form onSubmit={handleSubmit} className="flex gap-1">
       <ButtonGroup>
-        <Input
-          defaultValue={titleParam}
-          type="search"
-          placeholder="Search..."
-          onChange={(e) => setSearchTitle(e.target.value)}
-        />
-        <Select
-          defaultValue={selectedLanguage}
-          onValueChange={(value) =>
-            setSearchLanguage(value === "none" ? "" : value)
-          }
-        >
-          <Trigger className="bg-popover gap-0.5 min-w-26">
-            <Value placeholder="Languages" />
-          </Trigger>
+        <InputGroup>
+          <InputGroupInput
+            defaultValue={titleParam}
+            type="search"
+            placeholder="Search title..."
+            onChange={(e) => setSearchTitle(e.target.value)}
+          />
+          <InputGroupAddon>
+            <Search />
+          </InputGroupAddon>
+        </InputGroup>
 
-          <Content position="popper">
-            <Group>
-              <Label>Code Languages</Label>
-              <Item value="none">None</Item>
-              {languages.map((language) => (
-                <Item key={language.id} value={language.name}>
-                  {language.name}
+        <Combobox
+          items={items}
+          defaultValue={defaultItemValue}
+          onValueChange={(value) => setSearchLanguage(value)}
+          autoHighlight
+        >
+          <ComboboxInput showClear placeholder="Languages" className="min-w-26" />
+          <Content>
+            <Empty>No language found.</Empty>
+
+            <List>
+              {(language: ComboboxItem) => (
+                <Item key={language.id} value={language}>
+                  {language.label}
                 </Item>
-              ))}
-            </Group>
+              )}
+            </List>
           </Content>
-        </Select>
+        </Combobox>
       </ButtonGroup>
       <Button type="submit" className="cursor-pointer">
-        Search
+        <Search />
+        <span className="hidden sm:inline">Search</span>
       </Button>
     </form>
   );

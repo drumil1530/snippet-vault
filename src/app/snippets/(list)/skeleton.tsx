@@ -4,18 +4,17 @@ import { Skeleton } from "@/ui/skeleton";
 
 function SnippetSkeletonCard() {
   return (
-    <Card className="w-full">
-      <CardHeader className="gap-2">
-        <Skeleton className="h-6 w-full" />
+    <Card className="w-full cursor-progress">
+      <CardHeader className="gap-2 flex justify-between items-center">
+        <Skeleton className="h-6 w-40" />
         <Skeleton className="h-4 w-20" />
       </CardHeader>
       <Separator />
       <CardContent>
-        <Skeleton className="h-30 w-full" />
+        <Skeleton className="h-42 w-full" />
       </CardContent>
-      <CardFooter className="bg-card gap-2">
-        <Skeleton className="w-1/4 h-9" />
-        <Skeleton className="w-1/5 h-9" />
+      <CardFooter className="bg-card gap-2 justify-end p-2">
+        <Skeleton className="w-1/5 h-7" />
       </CardFooter>
     </Card>
   );

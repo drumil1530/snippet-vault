@@ -18,15 +18,15 @@ export default async function SnippetsPage(props: PageProps<"/snippets">) {
   return (
     <div className="px-3">
       <Card className="py-4 rounded-xl border">
-        <CardHeader className="flex justify-between flex-col sm:flex-row gap-2">
-          <CardTitle className="text-2xl font-heading">
+        <CardHeader className="flex justify-between items-center flex-col sm:flex-row gap-2">
+          <CardTitle className="text-2xl font-heading text-nowrap truncate">
             Explore Snippets
           </CardTitle>
           <SnippetSearch languages={languages} />
         </CardHeader>
         <CardContent className="pb-2">
           <Suspense fallback={<SnippetsListSkeleton />}>
-            <SnippetsList searchParams={searchParams} />
+            <SnippetsList searchParams={searchParams} languages={languages} />
           </Suspense>
         </CardContent>
       </Card>

@@ -2,19 +2,19 @@
 
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/ui/field";
 import { Input } from "@/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/ui/select";
 import { Textarea } from "@/ui/textarea";
 import { Language } from "@/generated/prisma/client";
 import { State } from "@/lib/types/utilities";
 import { useState, useEffect } from "react";
+import {
+  Combobox,
+  ComboboxContent as Content,
+  ComboboxEmpty as Empty,
+  ComboboxInput,
+  ComboboxItem as Item,
+  ComboboxList as List,
+} from "@/ui/combobox";
+import { ComboboxItem } from "@/lib/types/shadcn/combobox";
 
 export interface SnippetForm {
   title?: string;
@@ -37,9 +37,7 @@ export default function SnippetBaseForm({
     setIsReady(true);
   }, []);
 
-  const selectedLanguage = languages.find(
-    (l) => l.id === state.data?.languageId,
-  );
+  const selectedLanguage = languages.find((l) => l.id === state.data?.languageId);
 
   return (
     <FieldGroup>
@@ -56,39 +54,13 @@ export default function SnippetBaseForm({
       </Field>
       <Field data-invalid={state.errors?.properties?.languageId ? true : false}>
         <FieldLabel htmlFor="languageId">Language</FieldLabel>
-        <Select name="languageId" defaultValue={state.data?.languageId}>
-          {isReady ? (
-            <>
-              <SelectTrigger
-                className="w-full"
-                aria-invalid={
-                  state.errors?.properties?.languageId ? true : false
-                }
-              >
-                <SelectValue placeholder="Select code language">
-                  {selectedLanguage?.name}
-                </SelectValue>
-              </SelectTrigger>
-              <SelectContent position="popper">
-                <SelectGroup>
-                  <SelectLabel>Code languages</SelectLabel>
-                  {languages.map((language) => (
-                    <SelectItem key={language.id} value={language.id}>
-                      {language.name}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </>
-          ) : (
-            <SelectTrigger className="text-muted-foreground">
-              Loading languages...
-            </SelectTrigger>
-          )}
-        </Select>
-        <FieldError>
-          {state.errors?.properties?.languageId?.errors[0]}
-        </FieldError>
+        <RenderSelectList
+          isReady={isReady}
+          languages={languages}
+          state={state}
+          selectedLanguage={selectedLanguage}
+        />
+        <FieldError>{state.errors?.properties?.languageId?.errors[0]}</FieldError>
       </Field>
       <Field data-invalid={state.errors?.properties?.code ? true : false}>
         <FieldLabel htmlFor="code">Snippet Code</FieldLabel>
@@ -104,5 +76,58 @@ export default function SnippetBaseForm({
         <FieldError>{state.errors?.properties?.code?.errors[0]}</FieldError>
       </Field>
     </FieldGroup>
+  );
+}
+
+type SelectListProps = {
+  languages: Language[];
+  state: State<SnippetForm>;
+  isReady: boolean;
+  selectedLanguage?: Language;
+};
+
+function RenderSelectList(props: SelectListProps) {
+  const { isReady, languages, selectedLanguage, state } = props;
+  const defaultLang = languages.find((l) => l.id === state.data?.languageId) || selectedLanguage;
+
+  const defaultLangValue =
+    defaultLang &&
+    ({
+      id: defaultLang.id,
+      value: defaultLang.id,
+      label: defaultLang.name,
+    } satisfies ComboboxItem);
+
+  const items = languages.map((l) => ({
+    id: l.id,
+    value: l.id,
+    label: l.name,
+  })) satisfies ComboboxItem[];
+
+  return (
+    <Combobox items={items} defaultValue={defaultLangValue} name="languageId">
+      {isReady ? (
+        <>
+          <ComboboxInput
+            showClear
+            placeholder="Select language"
+            aria-invalid={state.errors?.properties?.languageId ? true : false}
+          />
+          <Content>
+            <Empty>No language found.</Empty>
+
+            <List>
+              {(language: ComboboxItem) => (
+                <Item key={language.id} value={language}>
+                  {language.label}
+                </Item>
+              )}
+            </List>
+          </Content>
+        </>
+      ) : (
+        <ComboboxInput disabled placeholder="Loading languages..." />
+      )}
+    </Combobox>
   );
 }

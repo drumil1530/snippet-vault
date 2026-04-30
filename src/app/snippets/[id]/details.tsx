@@ -14,6 +14,7 @@ import { appRoutes } from "@/utils/routes";
 import { buttonVariants } from "@/ui/button";
 import CodeCopyButton from "./code-copy-button";
 import DeleteSnippetButton from "./delete-dialog";
+import CodeBlock from "../_components/code-block";
 
 export default async function SnippetDetail({ id }: { id: string }) {
   const snippet = await getSnippet(id);
@@ -21,16 +22,16 @@ export default async function SnippetDetail({ id }: { id: string }) {
   if (!snippet) notFound();
 
   return (
-    <Card>
-      <CardHeader>
+    <Card className="gap-0">
+      <CardHeader className="flex justify-between items-center">
         <CardTitle>{snippet.title}</CardTitle>
-        <CardDescription>{snippet.language.name}</CardDescription>
+        <CardDescription className="font-mono">
+          {snippet.language.name}
+        </CardDescription>
       </CardHeader>
-      <Separator />
-      <CardContent className="min-h-32 relative">
-        <pre>
-          <code>{snippet.code}</code>
-        </pre>
+      <Separator className="mt-3" />
+      <CardContent className="h-42 min-h-42 relative p-0">
+        <CodeBlock lang={snippet.language.shikiLang}>{snippet.code}</CodeBlock>
         <CodeCopyButton code={snippet.code} />
       </CardContent>
       <CardFooter className="justify-between">
