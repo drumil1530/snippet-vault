@@ -1,7 +1,6 @@
 import SnippetsList from "./list";
 import SnippetSearch from "./search";
 import { SnippetsListSkeleton } from "./skeleton";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getAllLanguages } from "@/app/languages/_actions/get-languages";
 import { Metadata } from "next";
 import { Suspense } from "react";
@@ -16,20 +15,18 @@ export default async function SnippetsPage(props: PageProps<"/snippets">) {
   const languages = await getAllLanguages();
 
   return (
-    <div className="px-3">
-      <Card className="py-4 rounded-xl border">
-        <CardHeader className="flex justify-between items-center flex-col sm:flex-row gap-2">
-          <CardTitle className="text-2xl font-heading text-nowrap truncate">
-            Explore Snippets
-          </CardTitle>
+    <section>
+      <header className="flex justify-between gap-2 h-10 has-data-open:h-30 md:has-data-open:h-22 transition-[height] duration-100 relative">
+        <h2 className="text-3xl font-heading text-nowrap font-medium">Explore Snippets</h2>
+        <div className="absolute right-0 top-1 w-full">
           <SnippetSearch languages={languages} />
-        </CardHeader>
-        <CardContent className="pb-2">
-          <Suspense fallback={<SnippetsListSkeleton />}>
-            <SnippetsList searchParams={searchParams} languages={languages} />
-          </Suspense>
-        </CardContent>
-      </Card>
-    </div>
+        </div>
+      </header>
+      <div className="py-2">
+        <Suspense fallback={<SnippetsListSkeleton />}>
+          <SnippetsList searchParams={searchParams} languages={languages} />
+        </Suspense>
+      </div>
+    </section>
   );
 }

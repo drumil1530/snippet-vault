@@ -42,7 +42,7 @@ export default function RootLayout({
         geistMono.variable,
       )}
     >
-      <body className="min-h-full">
+      <body className="min-h-full w-full">
         <Providers>{children}</Providers>
       </body>
     </html>

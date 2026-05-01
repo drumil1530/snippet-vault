@@ -15,14 +15,15 @@ export default function DeleteSnippetButton({ id }: { id: string }) {
   return (
     <AlertDialog>
       <Trigger asChild>
-        <Button variant="destructive">Delete snippet</Button>
+        <Button variant="destructive">Delete</Button>
       </Trigger>
       <Content>
         <Header>
           <Title className="text-destructive">Are you absolutely sure?</Title>
           <Description>
-            This action cannot be undone. This will permanently delete your
-            snippet from our servers.
+            This action cannot be undone.
+            <br />
+            This will permanently delete your snippet from our servers.
           </Description>
         </Header>
         <Footer>

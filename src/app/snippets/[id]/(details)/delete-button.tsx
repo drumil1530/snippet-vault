@@ -1,7 +1,7 @@
 "use client";
 
 import { AlertDialogAction as Action } from "@/ui/alert-dialog";
-import { deleteSnippet } from "../_actions/delete-snippet";
+import { deleteSnippet } from "@/app/snippets/_actions/delete-snippet";
 import { toast } from "sonner";
 
 export default function DeleteButton({ id }: { id: string }) {
@@ -12,6 +12,7 @@ export default function DeleteButton({ id }: { id: string }) {
       <Action
         type="submit"
         variant="destructive"
+        className="w-full"
         onClick={() =>
           toast.success("Snippet deleted successfully!", {
             position: "top-center",

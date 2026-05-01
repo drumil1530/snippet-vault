@@ -9,7 +9,7 @@ import { z } from "zod";
 import { SnippetForm } from "../_components/base-form";
 import { snippetBaseSchema } from "../_components/schemas";
 
-export async function createNewSnippet(
+export async function createSnippet(
   _prevState: State<SnippetForm>,
   formData: FormData,
 ): Promise<State<SnippetForm>> {
@@ -20,7 +20,7 @@ export async function createNewSnippet(
   if (result.success) {
     await prisma.snippet.create({ data: result.data });
 
-    redirect(appRoutes.snippets.list);
+    redirect(appRoutes.home);
   } else {
     return {
       errors: z.treeifyError(result.error),

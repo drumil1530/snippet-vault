@@ -18,9 +18,9 @@ export default function CodeCopyButton({ code }: { code: string }) {
 
   return (
     <Button
-      variant="secondary"
+      variant="ghost"
       size="icon"
-      className="absolute top-2 right-2"
+      className="absolute top-2 right-2 z-1"
       onClick={handleClick}
     >
       {clicked ? (

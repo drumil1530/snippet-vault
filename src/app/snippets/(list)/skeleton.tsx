@@ -1,4 +1,4 @@
-import { Card, CardContent, CardFooter, CardHeader } from "@/ui/card";
+import { Card, CardContent, CardHeader } from "@/ui/card";
 import { Separator } from "@/ui/separator";
 import { Skeleton } from "@/ui/skeleton";
 
@@ -13,9 +13,6 @@ function SnippetSkeletonCard() {
       <CardContent>
         <Skeleton className="h-42 w-full" />
       </CardContent>
-      <CardFooter className="bg-card gap-2 justify-end p-2">
-        <Skeleton className="w-1/5 h-7" />
-      </CardFooter>
     </Card>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { Moon, Sun } from "lucide-react";
+import { Moon, MoonIcon, Sun, SunIcon, SunMoonIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 
 import { Button } from "@/ui/button";
@@ -23,10 +23,16 @@ export function ModeToggle() {
           <span className="sr-only">Toggle theme</span>
         </Button>
       </Trigger>
-      <Content align="end">
-        <Item onClick={() => setTheme("light")}>Light</Item>
-        <Item onClick={() => setTheme("dark")}>Dark</Item>
-        <Item onClick={() => setTheme("system")}>System</Item>
+      <Content align="end" className="min-w-26">
+        <Item onClick={() => setTheme("light")}>
+          <SunIcon /> Light
+        </Item>
+        <Item onClick={() => setTheme("dark")}>
+          <MoonIcon /> Dark
+        </Item>
+        <Item onClick={() => setTheme("system")}>
+          <SunMoonIcon /> System
+        </Item>
       </Content>
     </DropdownMenu>
   );

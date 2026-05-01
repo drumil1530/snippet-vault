@@ -1,5 +1,5 @@
 import { getAllSnippets, SnippetFilters, SnippetWithLanguage } from "../_actions/get-snippets";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/ui/card";
 import {
   Pagination,
   PaginationContent,
@@ -9,35 +9,35 @@ import {
   PaginationPrevious,
 } from "@/ui/pagination";
 import Link from "next/link";
-import { Button, buttonVariants } from "@/ui/button";
+import { Button } from "@/ui/button";
 import { appRoutes } from "@/utils/routes";
 import { Separator } from "@/ui/separator";
 import { UrlObject } from "node:url";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
-import ItemsButtonDropdown from "./items-button";
 import { ParsedUrlQueryInput } from "node:querystring";
-import CodeBlock from "../_components/code-block";
+import CodeBlock, { CodeBlockSkeleton } from "../_components/code-block";
 import { Language } from "@/generated/prisma/client";
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
+import CodeCopyButton from "../_components/code-copy-button";
 
-export default async function SnippetsList({
-  searchParams,
-  languages,
-}: {
+type SnippetListProps = {
   searchParams: Record<string, string | string[] | undefined>;
   languages: Language[];
-}) {
+};
+
+export default async function SnippetsList({ searchParams, languages }: SnippetListProps) {
   const filters = {
     page: Number.parseInt(searchParams["page"]?.toString() || "1"),
     sortBy: String(searchParams["sortby"]) === "asc" ? "asc" : "desc",
-    title: searchParams["title"]?.toString(),
+    query: searchParams["query"]?.toString(),
     items: Number.parseInt(searchParams["items"]?.toString() || "6"),
     language: searchParams["language"]?.toString().toLowerCase(),
   } satisfies SnippetFilters;
 
   const languagesMap = new Map(languages.map((lang) => [lang.slug, lang.name]));
 
-  if (filters.language && !languagesMap.has(filters.language)) redirect(appRoutes.snippets.list);
+  if (filters.language && !languagesMap.has(filters.language)) redirect(appRoutes.home);
 
   const { snippets, length } = await getAllSnippets(filters);
 
@@ -46,31 +46,28 @@ export default async function SnippetsList({
       {length > 0 ? (
         <>
           <RenderSnippetList snippets={snippets} />
-          <div className="flex justify-between items-center mt-4 mb-2">
-            <ItemsButtonDropdown pageItems={filters.items} />
+          <div className="flex justify-center items-center mt-4 mb-2">
             <SnippetPagination
               page={filters.page}
               sortBy={filters.sortBy}
               length={length}
               items={filters.items}
-              title={filters.title}
+              query={filters.query}
               language={filters.language}
             />
           </div>
         </>
       ) : (
         <p className="text-xl">
-          {filters.title &&
-            !filters.language &&
-            `No snippets found containing the title: ${filters.title}`}
+          {filters.query && !filters.language && `No snippets found containing: ${filters.query}`}
 
           {filters.language &&
-            !filters.title &&
+            !filters.query &&
             `No snippets found for the language: ${languagesMap.get(filters.language)}`}
 
-          {filters.title &&
+          {filters.query &&
             filters.language &&
-            `No snippets found for the language (${languagesMap.get(filters.language)}) having title "${filters.title}"`}
+            `No snippets found for the language (${languagesMap.get(filters.language)}) having "${filters.query}"`}
         </p>
       )}
     </>
@@ -81,23 +78,23 @@ function RenderSnippetList({ snippets }: { snippets: SnippetWithLanguage[] }) {
   return (
     <div className="grid gap-3 grid-cols-[repeat(auto-fit,minmax(20rem,1fr))]">
       {snippets.map((snippet) => (
-        <Card key={snippet.id} className="gap-0 hover:ring-foreground/25">
-          <CardHeader className="flex justify-between items-center">
-            <CardTitle>{snippet.title}</CardTitle>
+        <Card key={snippet.id} className="gap-0 hover:ring-foreground/25 relative p-0">
+          <CardHeader className="flex justify-between items-center py-3">
+            <CardTitle className="truncate max-w-3/4">{snippet.title}</CardTitle>
             <CardDescription className="font-mono">{snippet.language.name}</CardDescription>
           </CardHeader>
-          <Separator className="mt-3" />
-          <CardContent className="h-42 max-h-42 p-0">
-            <CodeBlock lang={snippet.language.shikiLang}>{snippet.code.slice(0, 150)}</CodeBlock>
+          <Separator />
+          <CardContent className="h-48 p-0 relative">
+            <Suspense fallback={<CodeBlockSkeleton />}>
+              <CodeBlock lang={snippet.language.shikiLang}>{snippet.code.slice(0, 150)}</CodeBlock>
+            </Suspense>
+            <CodeCopyButton code={snippet.code} />
+            <div className="w-full absolute bottom-0 left-0 bg-linear-to-b from-card/0 to-card h-18" />
           </CardContent>
-          <CardFooter className="p-2 justify-end">
-            <Link
-              href={appRoutes.snippets.details(snippet.id)}
-              className={buttonVariants({ variant: "ghost" })}
-            >
-              See detailed...
-            </Link>
-          </CardFooter>
+          <Link
+            href={appRoutes.snippets.details(snippet.id)}
+            className="absolute inset-0 h-full hover:bg-muted/20"
+          ></Link>
         </Card>
       ))}
     </div>
@@ -105,18 +102,18 @@ function RenderSnippetList({ snippets }: { snippets: SnippetWithLanguage[] }) {
 }
 
 function SnippetPagination(filters: SnippetFilters & { length: number }) {
-  const { page, sortBy, items, title, language, length } = filters;
+  const { page, sortBy, items, query, language, length } = filters;
 
   const queryInputs = {
     ...(sortBy !== "desc" && { sortBy }),
-    ...(title && { title }),
+    ...(query && { query }),
     ...(language && { language }),
     ...(items !== 6 && { items }),
   } satisfies ParsedUrlQueryInput;
 
   const goToPage = (pageNumber: number) =>
     ({
-      pathname: appRoutes.snippets.list,
+      pathname: appRoutes.home,
       query: { page: pageNumber, ...queryInputs },
     }) satisfies UrlObject;
 

@@ -4,51 +4,49 @@ import { useState } from "react";
 import { Button } from "@/ui/button";
 import {
   DropdownMenu,
-  DropdownMenuContent as MenuContent,
-  DropdownMenuItem as MenuItem,
-  DropdownMenuTrigger as MenuTrigger,
+  DropdownMenuContent as Content,
+  DropdownMenuItem as Item,
+  DropdownMenuTrigger as Trigger,
 } from "@/ui/dropdown-menu";
 import { appRoutes } from "@/utils/routes";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ButtonGroup, ButtonGroupSeparator } from "@/ui/button-group";
 import { ChevronDownIcon } from "lucide-react";
 
-export default function ItemsButtonDropdown({
-  pageItems,
-}: {
-  pageItems: number;
-}) {
-  const [items, setItems] = useState(pageItems);
+export default function ItemsButtonDropdown() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const params = new URLSearchParams(searchParams.toString());
+
+  const pageItems = params.get("items") || 6;
+  const [items, setItems] = useState(pageItems);
 
   function handleClick(newItemsNumber: number) {
     if (newItemsNumber !== 6) params.set("items", newItemsNumber.toString());
     else params.delete("items");
     setItems(newItemsNumber);
 
-    router.push(appRoutes.snippets.list + "?" + params.toString());
+    router.push(appRoutes.home + "?" + params.toString());
   }
 
   return (
     <DropdownMenu>
-      <ButtonGroup>
+      <ButtonGroup className="text-muted-foreground">
         <Button variant="outline">Items</Button>
         <ButtonGroupSeparator />
-        <MenuTrigger asChild>
+        <Trigger asChild>
           <Button variant="outline" className="ps-2 pe-1">
             {items}
             <ChevronDownIcon className="h-1 w-1 mt-0.5" />
           </Button>
-        </MenuTrigger>
+        </Trigger>
       </ButtonGroup>
-      <MenuContent className="min-w-auto">
-        <MenuItem onClick={() => handleClick(3)}>3</MenuItem>
-        <MenuItem onClick={() => handleClick(6)}>6</MenuItem>
-        <MenuItem onClick={() => handleClick(9)}>9</MenuItem>
-        <MenuItem onClick={() => handleClick(12)}>12</MenuItem>
-      </MenuContent>
+      <Content className="min-w-auto">
+        <Item onClick={() => handleClick(3)}>3</Item>
+        <Item onClick={() => handleClick(6)}>6</Item>
+        <Item onClick={() => handleClick(9)}>9</Item>
+        <Item onClick={() => handleClick(12)}>12</Item>
+      </Content>
     </DropdownMenu>
   );
 }

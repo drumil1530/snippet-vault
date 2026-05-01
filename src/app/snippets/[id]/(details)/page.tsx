@@ -7,18 +7,19 @@ import {
   BreadcrumbPage,
 } from "@/ui/breadcrumb";
 import { appRoutes } from "@/utils/routes";
+import SnippetDetail from "./details";
+import SnippetDetailsPageSkeleton from "./skeleton";
+import { Suspense } from "react";
 import Link from "next/link";
-import SnippetCreateForm from "./form";
-import { getAllLanguages } from "@/app/languages/_actions/get-languages";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "New Snippet",
-  description: "Page to create new snippet.",
+  title: "Snippet Details",
+  description: "Snippet details page.",
 };
 
-export default async function NewSnippetPage() {
-  const languages = await getAllLanguages();
+export default async function SnippetDetailPage(props: PageProps<"/snippets/[id]">) {
+  const { id } = await props.params;
 
   return (
     <section>
@@ -31,12 +32,14 @@ export default async function NewSnippetPage() {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>New Snippet</BreadcrumbPage>
+            <BreadcrumbPage>Snippet Details</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <h2 className="text-3xl font-medium mb-4">Create Snippet</h2>
-      <SnippetCreateForm languages={languages} />
+      <h2 className="text-3xl font-medium mb-4">Snippet Details</h2>
+      <Suspense fallback={<SnippetDetailsPageSkeleton />}>
+        <SnippetDetail id={id} />
+      </Suspense>
     </section>
   );
 }

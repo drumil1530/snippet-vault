@@ -1,9 +1,9 @@
 export const appRoutes = {
-  home: "/" as const,
+  home: "/snippets" as const,
   snippets: {
-    list: "/snippets" as const,
     new: `/snippets/new` as const,
     details: (id: string) => `/snippets/${id}` as const,
-    edit: (id: string) => `/snippets/edit/${id}` as const,
+    edit: (id: string) => `/snippets/${id}/edit` as const,
+    editFavorite: (id: string) => `/snippets/${id}/edit/favorite` as const,
   },
 };

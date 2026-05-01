@@ -9,7 +9,7 @@ import { z } from "zod";
 import { SnippetForm } from "../_components/base-form";
 import { snippetBaseSchema } from "../_components/schemas";
 
-export async function updateNewSnippet(
+export async function updateSnippet(
   id: string,
   _prevState: State<SnippetForm>,
   formData: FormData,

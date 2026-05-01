@@ -11,11 +11,9 @@ import Link from "next/link";
 
 export default function NotFoundPage() {
   return (
-    <Empty className="min-h-[calc(100vh-5rem)] border-2 border-solid">
+    <Empty className="min-h-full border-2 border-solid">
       <Header>
-        <Title className="text-3xl font-bold font-heading">
-          404 - Not Found
-        </Title>
+        <Title className="text-3xl font-bold font-heading">404 - Not Found</Title>
       </Header>
       <Content>
         <Description className="text-lg">

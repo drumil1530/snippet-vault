@@ -29,7 +29,6 @@ export default function SnippetBaseForm({
   state: State<SnippetForm>;
   languages: Language[];
 }) {
-  const codeLength = state.data?.code?.split("\n").length || 15;
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
@@ -68,8 +67,7 @@ export default function SnippetBaseForm({
           id="code"
           name="code"
           placeholder="Code of snippet"
-          rows={codeLength > 15 ? codeLength : 15}
-          className="font-mono"
+          className="font-mono min-h-60"
           defaultValue={state.data?.code}
           aria-invalid={state.errors?.properties?.code ? true : false}
         />

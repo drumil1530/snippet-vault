@@ -1,16 +1,15 @@
 import { ReactNode } from "react";
-import AppHeader from "./app-header";
-import { ScrollArea } from "@/ui/scroll-area";
 import { Toaster } from "@/ui/sonner";
+import Navbar from "./navbar";
 
 export default function MainContent({ children }: { children: ReactNode }) {
   return (
-    <main className="w-full">
-      <AppHeader />
-      <ScrollArea className="h-[calc(100%-4.3rem)] *:*:block!">
+    <>
+      <Navbar />
+      <main className="w-full px-4 md:px-0 max-w-full md:max-w-2xl lg:max-w-4xl xl:max-w-6xl mx-auto">
         {children}
-      </ScrollArea>
-      <Toaster />
-    </main>
+        <Toaster />
+      </main>
+    </>
   );
 }
