@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/ui/button";
+import { Button, buttonVariants } from "@/ui/button";
 import { ButtonGroup } from "@/ui/button-group";
 import {
   Combobox,
@@ -19,6 +19,7 @@ import { ChevronDown, ChevronUp, EraserIcon, Search } from "lucide-react";
 import { ComboboxItem } from "@/lib/types/shadcn/combobox";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/ui/collapsible";
 import ItemsButtonDropdown from "./items-button";
+import AppTooltip from "@/app/_components/ui/tooltip";
 
 export default function SnippetSearch({ languages }: { languages: Language[] }) {
   const searchParams = useSearchParams();
@@ -132,11 +133,17 @@ function CollapsibleSearch({ children }: { children: ReactNode }) {
       onOpenChange={setIsOpen}
       className="flex flex-col justify-start items-end gap-1.5"
     >
-      <CollapsibleTrigger asChild>
-        <Button variant="ghost" size="icon" className="*:h-1.5 *:w-1.5">
+      <AppTooltip content="Search" side="left">
+        <CollapsibleTrigger
+          className={buttonVariants({
+            variant: "outline",
+            size: "icon",
+            className: "*:h-1.5 *:w-1.5",
+          })}
+        >
           {isOpen ? <ChevronUp /> : <ChevronDown />}
-        </Button>
-      </CollapsibleTrigger>
+        </CollapsibleTrigger>
+      </AppTooltip>
       <CollapsibleContent className="w-full mt-1">{children}</CollapsibleContent>
     </Collapsible>
   );

@@ -24,6 +24,8 @@ export default function ItemsButtonDropdown() {
   function handleClick(newItemsNumber: number) {
     if (newItemsNumber !== 6) params.set("items", newItemsNumber.toString());
     else params.delete("items");
+
+    params.delete("page");
     setItems(newItemsNumber);
 
     router.push(appRoutes.home + "?" + params.toString());

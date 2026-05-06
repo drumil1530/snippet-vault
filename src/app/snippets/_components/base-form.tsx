@@ -122,7 +122,13 @@ function RenderLanguageSelectList(props: LanguageSelectListProps) {
   })) satisfies ComboboxItemType[];
 
   return (
-    <Combobox autoHighlight items={items} defaultValue={defaultLangValue} name="languageId">
+    <Combobox
+      autoHighlight
+      items={items}
+      defaultValue={defaultLangValue}
+      name="languageId"
+      id="languageId"
+    >
       {isReady ? (
         <>
           <ComboboxInput
@@ -207,7 +213,13 @@ function RenderTagsCombobox({ state }: RenderTagsComboboxProps) {
   }
 
   return (
-    <Combobox multiple items={tags} value={selected} onValueChange={(v) => setSelected(v)}>
+    <Combobox
+      multiple
+      items={tags}
+      value={selected}
+      onValueChange={(v) => setSelected(v)}
+      id="tags"
+    >
       <ComboboxChips ref={anchor}>
         <ComboboxValue>
           {(values: string[]) => (
@@ -231,6 +243,7 @@ function RenderTagsCombobox({ state }: RenderTagsComboboxProps) {
                 onChange={handleChange}
                 onKeyDown={handleEnter}
                 placeholder="Write and click enter to add tags..."
+                className="ms-0.5"
                 aria-invalid={state.errors?.properties?.tags ? true : false}
               />
               <input type="hidden" value={selected.toString()} name="tags" />

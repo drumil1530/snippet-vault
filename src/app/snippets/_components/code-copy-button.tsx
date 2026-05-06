@@ -1,11 +1,16 @@
 "use client";
 
+import AppTooltip from "@/app/_components/ui/tooltip";
 import { Button } from "@/ui/button";
+import { cn } from "@/utils/cn";
+import { ClassValue } from "clsx";
 import { Check, Copy } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
-export default function CodeCopyButton({ code }: { code: string }) {
+type CopyButtonProps = { code: string; className?: ClassValue };
+
+export default function CodeCopyButton({ code, className }: CopyButtonProps) {
   const [clicked, setClicked] = useState<boolean>(false);
 
   function handleClick() {
@@ -17,18 +22,16 @@ export default function CodeCopyButton({ code }: { code: string }) {
   }
 
   return (
-    <Button
-      variant="ghost"
-      size="icon"
-      className="absolute top-2 right-2 z-1"
-      onClick={handleClick}
-    >
-      {clicked ? (
-        <Check className="h-[1.2rem] w-[1.2rem]" />
-      ) : (
-        <Copy className="h-[1.2rem] w-[1.2rem]" />
-      )}
-      <span className="sr-only">Copy</span>
-    </Button>
+    <AppTooltip content="Copy">
+      <Button
+        variant="ghost"
+        size="icon"
+        className={cn("absolute top-2 right-2 z-1 [&>svg]:size-[1.2rem]", className)}
+        onClick={handleClick}
+      >
+        {clicked ? <Check /> : <Copy />}
+        <span className="sr-only">Copy</span>
+      </Button>
+    </AppTooltip>
   );
 }

@@ -22,21 +22,23 @@ export default async function SnippetDetailPage(props: PageProps<"/snippets/[id]
   const { id } = await props.params;
 
   return (
-    <section>
-      <Breadcrumb className="mb-2">
+    <section className="space-y-4">
+      <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
               <Link href={appRoutes.home}>Home</Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
+
           <BreadcrumbSeparator />
+
           <BreadcrumbItem>
             <BreadcrumbPage>Snippet Details</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <h2 className="text-3xl font-medium mb-4">Snippet Details</h2>
+
       <Suspense fallback={<SnippetDetailsPageSkeleton />}>
         <SnippetDetail id={id} />
       </Suspense>

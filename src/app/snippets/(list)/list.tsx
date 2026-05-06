@@ -1,5 +1,5 @@
 import { getAllSnippets, SnippetFilters, SnippetWithLanguage } from "../_actions/get-snippets";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/ui/card";
 import {
   Pagination,
   PaginationContent,
@@ -13,7 +13,7 @@ import { Button } from "@/ui/button";
 import { appRoutes } from "@/utils/routes";
 import { Separator } from "@/ui/separator";
 import { UrlObject } from "node:url";
-import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import { ChevronFirstIcon, ChevronLastIcon, ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { ParsedUrlQueryInput } from "node:querystring";
 import CodeBlock, { CodeBlockSkeleton } from "../_components/code-block";
 import { Language } from "@/generated/prisma/client";
@@ -81,8 +81,12 @@ function RenderSnippetList({ snippets }: { snippets: SnippetWithLanguage[] }) {
       {snippets.map((snippet) => (
         <Card key={snippet.id} className="gap-0 hover:ring-foreground/25 relative p-0">
           <CardHeader className="flex justify-between items-center py-3">
-            <CardTitle className="truncate max-w-3/4">{snippet.title}</CardTitle>
-            <CardDescription className="font-mono">{snippet.language.name}</CardDescription>
+            <CardTitle className="truncate max-w-3/4" title={snippet.title}>
+              {snippet.title}
+            </CardTitle>
+            <Badge variant="secondary" className="font-mono">
+              {snippet.language.name}
+            </Badge>
             {/* <div className="flex gap-1">
               {snippet.tagsOnSnippets.map((t) => (
                 <Badge variant="outline" key={t.tag.id}>
@@ -94,7 +98,9 @@ function RenderSnippetList({ snippets }: { snippets: SnippetWithLanguage[] }) {
           <Separator />
           <CardContent className="h-48 p-0 relative">
             <Suspense fallback={<CodeBlockSkeleton />}>
-              <CodeBlock lang={snippet.language.shikiLang}>{snippet.code.slice(0, 150)}</CodeBlock>
+              <CodeBlock lang={snippet.language.shikiLang} className="[&_code]:line-clamp-8">
+                {snippet.code.slice(0, 180)}
+              </CodeBlock>
             </Suspense>
             <CodeCopyButton code={snippet.code} />
             <div className="w-full absolute bottom-0 left-0 bg-linear-to-b from-card/0 to-card h-18" />
@@ -102,6 +108,7 @@ function RenderSnippetList({ snippets }: { snippets: SnippetWithLanguage[] }) {
           <Link
             href={appRoutes.snippets.details(snippet.id)}
             className="absolute inset-0 h-full hover:bg-muted/20"
+            title={snippet.title}
           ></Link>
         </Card>
       ))}
@@ -127,7 +134,7 @@ function SnippetPagination(filters: SnippetFilters & { length: number }) {
 
   const PreviousPageLink =
     page > 1 ? (
-      <PaginationPrevious href={page > 1 ? goToPage(page - 1) : "#"} aria-disabled={page <= 1} />
+      <PaginationPrevious href={page > 1 ? goToPage(page - 1) : "#"} />
     ) : (
       <Button variant="ghost" disabled>
         <ChevronLeftIcon data-icon="inline-start" />
@@ -137,10 +144,7 @@ function SnippetPagination(filters: SnippetFilters & { length: number }) {
 
   const NextPageLink =
     page < length ? (
-      <PaginationNext
-        href={page < length ? goToPage(page + 1) : "#"}
-        aria-disabled={page >= length}
-      />
+      <PaginationNext href={page < length ? goToPage(page + 1) : "#"} />
     ) : (
       <Button variant="ghost" disabled>
         <span className="hidden sm:block">Next</span>
@@ -148,10 +152,35 @@ function SnippetPagination(filters: SnippetFilters & { length: number }) {
       </Button>
     );
 
+  const FirstPageLink =
+    page > 1 ? (
+      <PaginationLink href={goToPage(1)} aria-label="Go to first page">
+        <ChevronFirstIcon className="size-4" />
+      </PaginationLink>
+    ) : (
+      <Button variant="ghost" size="icon" disabled>
+        <ChevronFirstIcon className="size-4" />
+      </Button>
+    );
+
+  const LastPageLink =
+    page < length ? (
+      <PaginationLink href={goToPage(length)} aria-label="Go to last page">
+        <ChevronLastIcon className="size-4" />
+      </PaginationLink>
+    ) : (
+      <Button variant="ghost" size="icon" disabled>
+        <ChevronLastIcon className="size-4" />
+      </Button>
+    );
+
   return (
     <Pagination className="w-auto m-0">
       <PaginationContent>
-        <PaginationItem>{PreviousPageLink}</PaginationItem>
+        <PaginationItem className="flex items-center">
+          {FirstPageLink}
+          {PreviousPageLink}
+        </PaginationItem>
         <PaginationItem>
           {/* Third last Page link when on last page */}
           {page - 2 > 0 && page === length && (
@@ -174,7 +203,10 @@ function SnippetPagination(filters: SnippetFilters & { length: number }) {
             <PaginationLink href={goToPage(page + 2)}>{page + 2}</PaginationLink>
           )}
         </PaginationItem>
-        <PaginationItem>{NextPageLink}</PaginationItem>
+        <PaginationItem className="flex items-center">
+          {NextPageLink}
+          {LastPageLink}
+        </PaginationItem>
       </PaginationContent>
     </Pagination>
   );

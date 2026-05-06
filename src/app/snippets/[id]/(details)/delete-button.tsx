@@ -3,9 +3,12 @@
 import { AlertDialogAction as Action } from "@/ui/alert-dialog";
 import { deleteSnippet } from "@/app/snippets/_actions/delete-snippet";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { appRoutes } from "@/utils/routes";
 
 export default function DeleteButton({ id }: { id: string }) {
   const formAction = deleteSnippet.bind(null, id);
+  const router = useRouter();
 
   return (
     <form action={formAction}>
@@ -13,11 +16,12 @@ export default function DeleteButton({ id }: { id: string }) {
         type="submit"
         variant="destructive"
         className="w-full"
-        onClick={() =>
+        onClick={() => {
           toast.success("Snippet deleted successfully!", {
             position: "top-center",
-          })
-        }
+          });
+          router.push(appRoutes.home);
+        }}
       >
         Confirm
       </Action>

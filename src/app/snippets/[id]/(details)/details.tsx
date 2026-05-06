@@ -1,6 +1,6 @@
 import { getSnippet } from "@/app/snippets/_actions/get-snippets";
 import { notFound } from "next/navigation";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/ui/card";
 import { Separator } from "@/ui/separator";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/ui/dropdown-menu";
 import Link from "next/link";
@@ -11,7 +11,7 @@ import DeleteSnippetButton from "./delete-dialog";
 import CodeBlock from "@/app/snippets/_components/code-block";
 import FavoriteButton from "./favorite-button";
 import { Badge } from "@/ui/badge";
-import { EllipsisVertical } from "lucide-react";
+import { EllipsisVertical, PenIcon } from "lucide-react";
 
 export default async function SnippetDetail({ id }: { id: string }) {
   const snippet = await getSnippet(id);
@@ -20,51 +20,71 @@ export default async function SnippetDetail({ id }: { id: string }) {
   const tags = snippet.tagsOnSnippets.map((t) => t.tag);
 
   return (
-    <Card className="gap-0 p-0">
-      <CardHeader className="flex justify-between items-center py-2">
-        <div>
-          <CardTitle>{snippet.title}</CardTitle>
-          <CardDescription className="font-mono mb-1">{snippet.language.name}</CardDescription>
-        </div>
-        <div className="flex items-center gap-1">
-          <FavoriteButton id={snippet.id} isFavorite={snippet.isFavorite} />
-          <DropdownMenu>
-            <DropdownMenuTrigger className={buttonVariants({ variant: "ghost", size: "icon" })}>
-              <EllipsisVertical className="size-5" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="flex flex-col justify-center items-stretch gap-1">
-              <Link
-                href={appRoutes.snippets.edit(snippet.id)}
-                className={buttonVariants({ variant: "secondary" })}
-              >
-                Edit
+    <Card className="overflow-hidden py-0 gap-0">
+      <CardHeader className="space-y-4 py-5">
+        <div className="flex items-start justify-between gap-4">
+          <div className="space-y-2">
+            <CardTitle className="text-2xl" title={snippet.title}>
+              {snippet.title}
+            </CardTitle>
+
+            <Badge variant="secondary" className="w-fit font-mono">
+              <Link href={{ pathname: appRoutes.home, query: { language: snippet.language.slug } }}>
+                {snippet.language.name}
               </Link>
-              <DeleteSnippetButton id={snippet.id} />
-            </DropdownMenuContent>
-          </DropdownMenu>
+            </Badge>
+          </div>
+
+          <div className="flex items-center gap-1">
+            <FavoriteButton id={snippet.id} isFavorite={snippet.isFavorite} />
+
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                className={buttonVariants({
+                  variant: "ghost",
+                  size: "icon",
+                })}
+              >
+                <EllipsisVertical className="size-5" />
+              </DropdownMenuTrigger>
+
+              <DropdownMenuContent align="end" className="w-fit min-w-24 flex flex-col gap-1">
+                <Link
+                  href={appRoutes.snippets.edit(snippet.id)}
+                  className={buttonVariants({ variant: "secondary" })}
+                >
+                  <PenIcon />
+                  Edit
+                </Link>
+
+                <DeleteSnippetButton id={snippet.id} />
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
-      </CardHeader>
-      {tags.length > 0 && (
-        <>
-          <Separator />
-          <div className="flex gap-1 overflow-x-scroll px-4 py-2">
+
+        {tags.length > 0 && (
+          <div className="flex flex-wrap gap-2">
             {tags.map((tag) => (
               <Badge variant="outline" key={tag.id}>
                 {tag.name}
               </Badge>
             ))}
           </div>
-        </>
-      )}
+        )}
+      </CardHeader>
+
       <Separator />
-      <CardContent className="min-h-42 relative p-0">
+
+      <CardContent className="relative p-4">
         <CodeBlock
           lang={snippet.language.shikiLang}
-          className="[&>pre]:whitespace-pre [&>pre]:overflow-x-scroll"
+          className="rounded-xl border overflow-hidden [&>pre]:overflow-x-auto"
         >
           {snippet.code}
         </CodeBlock>
-        <CodeCopyButton code={snippet.code} />
+
+        <CodeCopyButton code={snippet.code} className="top-5 right-5" />
       </CardContent>
     </Card>
   );

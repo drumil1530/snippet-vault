@@ -25,7 +25,7 @@ export default function FavoriteButton({ id, isFavorite }: FavoriteButtonProps) 
   }
 
   return (
-    <button onClick={handleClick}>
+    <button onClick={handleClick} className="*:size-5">
       {favorite ? <Star className="fill-foreground" /> : <Star />}
     </button>
   );

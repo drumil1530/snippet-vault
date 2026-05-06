@@ -10,12 +10,15 @@ import {
 } from "@/ui/alert-dialog";
 import { Button } from "@/ui/button";
 import DeleteButton from "./delete-button";
+import { Trash2Icon } from "lucide-react";
 
 export default function DeleteSnippetButton({ id }: { id: string }) {
   return (
     <AlertDialog>
       <Trigger asChild>
-        <Button variant="destructive">Delete</Button>
+        <Button variant="destructive">
+          <Trash2Icon /> Delete
+        </Button>
       </Trigger>
       <Content>
         <Header>

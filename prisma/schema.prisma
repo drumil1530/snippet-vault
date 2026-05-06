@@ -50,8 +50,8 @@ model TagsOnSnippets {
   tagId     String
   snippetId String
 
-  tag     Tag     @relation(fields: [tagId], references: [id])
-  snippet Snippet @relation(fields: [snippetId], references: [id])
+  tag     Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  snippet Snippet @relation(fields: [snippetId], references: [id], onDelete: Cascade)
 
   @@id([tagId, snippetId])
   @@map("tags-on-snippets")

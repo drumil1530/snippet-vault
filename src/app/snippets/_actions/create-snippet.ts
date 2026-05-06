@@ -18,11 +18,14 @@ export async function createSnippet(
   const result = snippetBaseSchema.safeParse(parsedData);
 
   if (result.success) {
+    const { title, code, languageId } = result.data;
     const tagsOnSnippet = await getTagsOnSnippet(result.data.tags);
 
     await prisma.snippet.create({
       data: {
-        ...result.data,
+        title,
+        code,
+        languageId,
         tagsOnSnippets: {
           createMany: { data: tagsOnSnippet.map((tagId) => ({ tagId })) },
         },
