@@ -5,11 +5,12 @@ import SnippetBaseForm, { SnippetForm } from "@/app/snippets/_components/base-fo
 import { Button } from "@/ui/button";
 import { State } from "@/lib/types/utilities";
 import { useActionState } from "react";
-import { Language, Snippet } from "@/generated/prisma/client";
+import { Language } from "@/generated/prisma/client";
+import { SnippetWithLanguageAndTags } from "@/app/snippets/_actions/get-snippets";
 
 type SnippetUpdateFormProps = {
   id: string;
-  snippetData: Snippet | null;
+  snippetData: SnippetWithLanguageAndTags;
   languages: Language[];
 };
 
@@ -19,6 +20,7 @@ export default function SnippetUpdateForm({ id, snippetData, languages }: Snippe
       title: snippetData?.title,
       languageId: snippetData?.languageId,
       code: snippetData?.code,
+      tags: snippetData.tagsOnSnippets.map((t) => t.tag.name).join(","),
     },
   };
 

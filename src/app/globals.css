@@ -136,4 +136,7 @@
   ::selection {
     @apply bg-foreground text-background;
   }
+  *:focus-visible {
+    @apply outline-0 rounded-lg border-ring ring-3 ring-ring/50;
+  }
 }

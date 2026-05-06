@@ -13,15 +13,15 @@ type FavoriteButtonProps = {
 export default function FavoriteButton({ id, isFavorite }: FavoriteButtonProps) {
   const [favorite, setFavorite] = useState(isFavorite);
 
-  const [debounceValue] = useDebounce(!favorite, 500);
+  const [debounceValue] = useDebounce(!favorite, 300);
 
   async function handleClick() {
+    setFavorite(debounceValue);
+
     await fetch(appRoutes.snippets.editFavorite(id), {
       method: "PATCH",
       body: JSON.stringify(debounceValue),
     });
-
-    setFavorite(debounceValue);
   }
 
   return (

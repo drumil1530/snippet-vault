@@ -7,7 +7,11 @@ import { State } from "@/lib/types/utilities";
 import { useActionState } from "react";
 import { Language } from "@/generated/prisma/client";
 
-export default function SnippetCreateForm({ languages }: { languages: Language[] }) {
+type SnippetCreateFormProps = {
+  languages: Language[];
+};
+
+export default function SnippetCreateForm({ languages }: SnippetCreateFormProps) {
   const initialState: State<SnippetForm> = {};
   const [state, formAction, isPending] = useActionState(createSnippet, initialState);
 

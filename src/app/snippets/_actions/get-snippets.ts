@@ -38,7 +38,13 @@ export async function getAllSnippets(filters: SnippetFilters) {
     skip: (page - 1) * items,
     orderBy: [{ updatedAt: sortBy }, { id: "desc" }],
     where: whereInput,
-    include: { language: true },
+    include: {
+      language: true,
+      tagsOnSnippets: {
+        omit: { tagId: true, snippetId: true },
+        include: { tag: true },
+      },
+    },
   });
 
   return { snippets, length };
@@ -47,8 +53,16 @@ export async function getAllSnippets(filters: SnippetFilters) {
 export async function getSnippet(id: string) {
   const snippet = await prisma.snippet.findUnique({
     where: { id },
-    include: { language: true },
+    include: {
+      language: true,
+      tagsOnSnippets: {
+        omit: { tagId: true, snippetId: true },
+        include: { tag: true },
+      },
+    },
   });
 
   return snippet;
 }
+
+export type SnippetWithLanguageAndTags = NonNullable<Awaited<ReturnType<typeof getSnippet>>>;

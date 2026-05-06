@@ -12,7 +12,7 @@ export default function SnippetDetailsPageSkeleton() {
         </div>
         <div className="flex gap-1.5">
           <Skeleton className="h-7 w-12" />
-          <Skeleton className="h-7 w-26" />
+          <Skeleton className="h-7 w-10" />
         </div>
       </CardHeader>
       <Separator />

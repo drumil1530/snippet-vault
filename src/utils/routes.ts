@@ -6,4 +6,7 @@ export const appRoutes = {
     edit: (id: string) => `/snippets/${id}/edit` as const,
     editFavorite: (id: string) => `/snippets/${id}/edit/favorite` as const,
   },
+  tags: {
+    search: (query: string) => `/tags?query=${query}` as const,
+  },
 };

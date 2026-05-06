@@ -20,6 +20,7 @@ import { Language } from "@/generated/prisma/client";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import CodeCopyButton from "../_components/code-copy-button";
+import { Badge } from "@/ui/badge";
 
 type SnippetListProps = {
   searchParams: Record<string, string | string[] | undefined>;
@@ -82,6 +83,13 @@ function RenderSnippetList({ snippets }: { snippets: SnippetWithLanguage[] }) {
           <CardHeader className="flex justify-between items-center py-3">
             <CardTitle className="truncate max-w-3/4">{snippet.title}</CardTitle>
             <CardDescription className="font-mono">{snippet.language.name}</CardDescription>
+            {/* <div className="flex gap-1">
+              {snippet.tagsOnSnippets.map((t) => (
+                <Badge variant="outline" key={t.tag.id}>
+                  {t.tag.name}
+                </Badge>
+              ))}
+            </div> */}
           </CardHeader>
           <Separator />
           <CardContent className="h-48 p-0 relative">

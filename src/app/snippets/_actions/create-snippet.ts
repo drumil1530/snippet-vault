@@ -18,7 +18,16 @@ export async function createSnippet(
   const result = snippetBaseSchema.safeParse(parsedData);
 
   if (result.success) {
-    await prisma.snippet.create({ data: result.data });
+    const tagsOnSnippet = await getTagsOnSnippet(result.data.tags);
+
+    await prisma.snippet.create({
+      data: {
+        ...result.data,
+        tagsOnSnippets: {
+          createMany: { data: tagsOnSnippet.map((tagId) => ({ tagId })) },
+        },
+      },
+    });
 
     redirect(appRoutes.home);
   } else {
@@ -27,4 +36,22 @@ export async function createSnippet(
       data: parsedData,
     };
   }
+}
+
+async function getTagsOnSnippet(tagsInput: string[]) {
+  const existingTags = await prisma.tag.findMany({
+    where: { name: { in: tagsInput } },
+  });
+
+  const existingTagNames = existingTags.map((t) => t.name);
+  const tagsToCreate = tagsInput.filter((t) => !existingTagNames.includes(t));
+
+  const newTags = await prisma.tag.createManyAndReturn({
+    data: tagsToCreate.map((t) => ({ name: t })),
+    select: { id: true },
+  });
+
+  const tagIdsOnSnippet = [...existingTags.map((t) => t.id), ...newTags.map((t) => t.id)];
+
+  return tagIdsOnSnippet;
 }
