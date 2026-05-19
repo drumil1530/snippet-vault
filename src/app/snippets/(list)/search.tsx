@@ -13,7 +13,7 @@ import {
 import { Language } from "@/generated/prisma/client";
 import { appRoutes } from "@/utils/routes";
 import { useSearchParams, useRouter } from "next/navigation";
-import { ReactNode, useState, type SubmitEvent } from "react";
+import { ReactNode, useEffect, useMemo, useState, type SubmitEvent } from "react";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/ui/input-group";
 import { ChevronDown, ChevronUp, EraserIcon, Search } from "lucide-react";
 import { ComboboxItem } from "@/lib/types/shadcn/combobox";
@@ -26,26 +26,32 @@ export default function SnippetSearch({ languages }: { languages: Language[] }) 
   const router = useRouter();
   const params = new URLSearchParams(searchParams.toString());
 
-  const titleParam = searchParams.get("title") || "";
+  const queryParam = searchParams.get("query") || "";
   const languageParam = searchParams.get("language")?.toLowerCase();
-  const selectedLanguage = languages.find((l) => l.slug === languageParam);
 
-  const items = languages.map((l) => ({
-    id: l.id,
-    value: l.slug,
-    label: l.name,
-  })) satisfies ComboboxItem[];
+  const items = useMemo(
+    () =>
+      languages.map((l) => ({
+        id: l.id,
+        value: l.slug,
+        label: l.name,
+      })),
+    [languages],
+  );
 
-  const defaultItemValue = selectedLanguage
-    ? ({
-        id: selectedLanguage.id,
-        label: selectedLanguage.name,
-        value: selectedLanguage.slug,
-      } satisfies ComboboxItem)
-    : null;
+  const selectedLanguage = useMemo(
+    () => items.find((i) => i.value === languageParam) ?? null,
+    [items, languageParam],
+  );
 
-  const [searchQuery, setSearchQuery] = useState(titleParam);
-  const [searchLanguage, setSearchLanguage] = useState<ComboboxItem | null>(defaultItemValue);
+  const [searchQuery, setSearchQuery] = useState(queryParam);
+  const [searchLanguage, setSearchLanguage] = useState<ComboboxItem | null>(selectedLanguage);
+
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => setSearchLanguage(selectedLanguage), [selectedLanguage]);
+
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => setSearchQuery(queryParam), [queryParam]);
 
   function handleSubmit(e: SubmitEvent) {
     e.preventDefault();
@@ -67,7 +73,7 @@ export default function SnippetSearch({ languages }: { languages: Language[] }) 
   }
 
   return (
-    <CollapsibleSearch>
+    <CollapsibleContainer>
       <form onSubmit={handleSubmit} className="flex flex-col md:flex-row gap-1.5 w-full">
         <ButtonGroup className="w-full">
           <InputGroup>
@@ -85,8 +91,7 @@ export default function SnippetSearch({ languages }: { languages: Language[] }) 
           <Combobox
             items={items}
             value={searchLanguage}
-            defaultValue={defaultItemValue}
-            onValueChange={(value) => setSearchLanguage(value)}
+            onValueChange={setSearchLanguage}
             autoHighlight
           >
             <ComboboxInput showClear placeholder="Languages" className="min-w-26" />
@@ -120,11 +125,11 @@ export default function SnippetSearch({ languages }: { languages: Language[] }) 
           <ItemsButtonDropdown />
         </div>
       </form>
-    </CollapsibleSearch>
+    </CollapsibleContainer>
   );
 }
 
-function CollapsibleSearch({ children }: { children: ReactNode }) {
+function CollapsibleContainer({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -138,7 +143,7 @@ function CollapsibleSearch({ children }: { children: ReactNode }) {
           className={buttonVariants({
             variant: "outline",
             size: "icon",
-            className: "*:h-1.5 *:w-1.5",
+            className: "*:size-1.5",
           })}
         >
           {isOpen ? <ChevronUp /> : <ChevronDown />}

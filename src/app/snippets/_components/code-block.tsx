@@ -9,7 +9,7 @@ interface Props {
   className?: ClassValue;
 }
 
-export default async function CodeBlock(props: Props) {
+export async function CodeBlock(props: Props) {
   const out = await codeToHtml(props.children, {
     lang: props.lang,
     themes: {

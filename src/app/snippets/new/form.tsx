@@ -1,7 +1,7 @@
 "use client";
 
 import { createSnippet } from "@/app/snippets/_actions/create-snippet";
-import SnippetBaseForm, { SnippetForm } from "../_components/base-form";
+import { SnippetBaseForm, SnippetForm } from "../_components/base-form";
 import { Button } from "@/ui/button";
 import { State } from "@/lib/types/utilities";
 import { useActionState } from "react";

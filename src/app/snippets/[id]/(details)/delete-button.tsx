@@ -1,7 +1,7 @@
 "use client";
 
 import { AlertDialogAction as Action } from "@/ui/alert-dialog";
-import { deleteSnippet } from "@/app/snippets/_actions/delete-snippet";
+import { deleteSnippet } from "@/app/snippets/_actions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { appRoutes } from "@/utils/routes";

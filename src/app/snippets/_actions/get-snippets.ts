@@ -1,22 +1,15 @@
 "use server";
 
-import { SortOrder } from "@/generated/prisma/internal/prismaNamespace";
 import { SnippetWhereInput } from "@/generated/prisma/models";
 import prisma from "@/lib/prisma-client";
 import { appRoutes } from "@/utils/routes";
 import { redirect } from "next/navigation";
+import z from "zod";
+import { searchFiltersSchema } from "../_components/schemas";
 
 export type SnippetWithLanguage = NonNullable<Awaited<ReturnType<typeof getSnippet>>>;
 
-export type SnippetFilters = {
-  page: number;
-  sortBy: SortOrder;
-  items: number;
-  query?: string;
-  language?: string;
-};
-
-export async function getAllSnippets(filters: SnippetFilters) {
+export async function getAllSnippets(filters: z.infer<typeof searchFiltersSchema>) {
   const { page, sortBy, items, query, language } = filters;
 
   const whereInput = {
@@ -26,7 +19,9 @@ export async function getAllSnippets(filters: SnippetFilters) {
         { code: { contains: query, mode: "insensitive" } },
       ],
     }),
-    ...(language && { language: { name: { equals: language, mode: "insensitive" } } }),
+    ...(language && {
+      language: { name: { equals: language, mode: "insensitive" } },
+    }),
   } satisfies SnippetWhereInput;
 
   const length = Math.ceil((await prisma.snippet.count({ where: whereInput })) / items);

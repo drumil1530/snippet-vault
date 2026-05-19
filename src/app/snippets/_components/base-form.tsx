@@ -42,7 +42,7 @@ type SnippetBaseFormProps = {
   languages: Language[];
 };
 
-export default function SnippetBaseForm({ state, languages }: SnippetBaseFormProps) {
+export function SnippetBaseForm({ state, languages }: SnippetBaseFormProps) {
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {

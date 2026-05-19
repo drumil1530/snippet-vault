@@ -1,3 +1,4 @@
+import { Button } from "@/ui/button";
 import SnippetsList from "./list";
 import SnippetSearch from "./search";
 import { SnippetsListSkeleton } from "./skeleton";
@@ -11,7 +12,7 @@ export const metadata: Metadata = {
 };
 
 export default async function SnippetsPage(props: PageProps<"/snippets">) {
-  const searchParams = await props.searchParams;
+  const { searchParams } = props;
   const languages = await getAllLanguages();
 
   return (
@@ -21,7 +22,9 @@ export default async function SnippetsPage(props: PageProps<"/snippets">) {
       </h2>
 
       <div className="w-full -mt-8.5 mb-2">
-        <SnippetSearch languages={languages} />
+        <Suspense fallback={<Button value="Loading" variant="outline" />}>
+          <SnippetSearch languages={languages} />
+        </Suspense>
       </div>
       <div className="py-2">
         <Suspense fallback={<SnippetsListSkeleton />}>

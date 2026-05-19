@@ -1,4 +1,4 @@
-import { getSnippet } from "@/app/snippets/_actions/get-snippets";
+import { getSnippet } from "@/app/snippets/_actions";
 import { notFound } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/ui/card";
 import { Separator } from "@/ui/separator";
@@ -6,12 +6,11 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/ui/dro
 import Link from "next/link";
 import { appRoutes } from "@/utils/routes";
 import { buttonVariants } from "@/ui/button";
-import CodeCopyButton from "@/app/snippets/_components/code-copy-button";
 import DeleteSnippetButton from "./delete-dialog";
-import CodeBlock from "@/app/snippets/_components/code-block";
 import FavoriteButton from "./favorite-button";
 import { Badge } from "@/ui/badge";
 import { EllipsisVertical, PenIcon } from "lucide-react";
+import { CodeBlock, CodeCopyButton } from "@/app/snippets/_components";
 
 export default async function SnippetDetail({ id }: { id: string }) {
   const snippet = await getSnippet(id);
@@ -41,7 +40,7 @@ export default async function SnippetDetail({ id }: { id: string }) {
             <DropdownMenu>
               <DropdownMenuTrigger
                 className={buttonVariants({
-                  variant: "ghost",
+                  variant: "secondary",
                   size: "icon",
                 })}
               >

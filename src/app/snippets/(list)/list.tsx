@@ -1,4 +1,3 @@
-import { getAllSnippets, SnippetFilters, SnippetWithLanguage } from "../_actions/get-snippets";
 import { Card, CardContent, CardHeader, CardTitle } from "@/ui/card";
 import {
   Pagination,
@@ -15,26 +14,29 @@ import { Separator } from "@/ui/separator";
 import { UrlObject } from "node:url";
 import { ChevronFirstIcon, ChevronLastIcon, ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { ParsedUrlQueryInput } from "node:querystring";
-import CodeBlock, { CodeBlockSkeleton } from "../_components/code-block";
 import { Language } from "@/generated/prisma/client";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
-import CodeCopyButton from "../_components/code-copy-button";
 import { Badge } from "@/ui/badge";
+import z from "zod";
+import { getAllSnippets, SnippetWithLanguage } from "@/app/snippets/_actions";
+import {
+  CodeBlock,
+  CodeBlockSkeleton,
+  CodeCopyButton,
+  searchFiltersSchema,
+} from "@/app/snippets/_components";
 
 type SnippetListProps = {
-  searchParams: Record<string, string | string[] | undefined>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
   languages: Language[];
 };
 
 export default async function SnippetsList({ searchParams, languages }: SnippetListProps) {
-  const filters = {
-    page: Number.parseInt(searchParams["page"]?.toString() || "1"),
-    sortBy: String(searchParams["sortby"]) === "asc" ? "asc" : "desc",
-    query: searchParams["query"]?.toString(),
-    items: Number.parseInt(searchParams["items"]?.toString() || "6"),
-    language: searchParams["language"]?.toString().toLowerCase(),
-  } satisfies SnippetFilters;
+  const result = searchFiltersSchema.safeParse(await searchParams);
+  if (!result.success) redirect(appRoutes.home);
+
+  const filters = result.data;
 
   const languagesMap = new Map(languages.map((lang) => [lang.slug, lang.name]));
 
@@ -80,20 +82,24 @@ function RenderSnippetList({ snippets }: { snippets: SnippetWithLanguage[] }) {
     <div className="grid gap-3 grid-cols-[repeat(auto-fit,minmax(20rem,1fr))]">
       {snippets.map((snippet) => (
         <Card key={snippet.id} className="gap-0 hover:ring-foreground/25 relative p-0">
-          <CardHeader className="flex justify-between items-center py-3">
-            <CardTitle className="truncate max-w-3/4" title={snippet.title}>
-              {snippet.title}
-            </CardTitle>
-            <Badge variant="secondary" className="font-mono">
-              {snippet.language.name}
-            </Badge>
-            {/* <div className="flex gap-1">
-              {snippet.tagsOnSnippets.map((t) => (
-                <Badge variant="outline" key={t.tag.id}>
-                  {t.tag.name}
-                </Badge>
-              ))}
-            </div> */}
+          <CardHeader className="py-4 gap-3">
+            <div className="flex justify-between items-center">
+              <CardTitle className="truncate max-w-3/4" title={snippet.title}>
+                {snippet.title}
+              </CardTitle>
+              <Badge variant="secondary" className="font-mono">
+                {snippet.language.name}
+              </Badge>
+            </div>
+            {/* {snippet.tagsOnSnippets.length > 0 && (
+              <div className="flex gap-1">
+                {snippet.tagsOnSnippets.map((t) => (
+                  <Badge variant="outline" key={t.tag.id}>
+                    {t.tag.name}
+                  </Badge>
+                ))}
+              </div>
+            )} */}
           </CardHeader>
           <Separator />
           <CardContent className="h-48 p-0 relative">
@@ -116,7 +122,7 @@ function RenderSnippetList({ snippets }: { snippets: SnippetWithLanguage[] }) {
   );
 }
 
-function SnippetPagination(filters: SnippetFilters & { length: number }) {
+function SnippetPagination(filters: z.infer<typeof searchFiltersSchema> & { length: number }) {
   const { page, sortBy, items, query, language, length } = filters;
 
   const queryInputs = {

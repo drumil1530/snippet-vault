@@ -1,3 +1,4 @@
+import { SortOrder } from "@/generated/prisma/internal/prismaNamespace";
 import { z } from "zod";
 
 export const snippetBaseSchema = z.object({
@@ -10,4 +11,16 @@ export const snippetBaseSchema = z.object({
   }),
   code: z.string().min(1, { error: "Code field should not be empty." }),
   tags: z.string().transform((data) => data.split(",")),
+});
+
+export const searchFiltersSchema = z.object({
+  page: z.coerce.number().positive().optional().default(1),
+  sortBy: z.literal<SortOrder[]>(["asc", "desc"]).optional().default("desc"),
+  items: z
+    .literal(["3", "6", "9", "12"])
+    .optional()
+    .default("6")
+    .transform((d) => Number(d)),
+  query: z.string().toLowerCase().optional(),
+  language: z.string().toLowerCase().optional(),
 });

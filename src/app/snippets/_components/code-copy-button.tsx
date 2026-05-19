@@ -10,7 +10,7 @@ import { toast } from "sonner";
 
 type CopyButtonProps = { code: string; className?: ClassValue };
 
-export default function CodeCopyButton({ code, className }: CopyButtonProps) {
+export function CodeCopyButton({ code, className }: CopyButtonProps) {
   const [clicked, setClicked] = useState<boolean>(false);
 
   function handleClick() {
