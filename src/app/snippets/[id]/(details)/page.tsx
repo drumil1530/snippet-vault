@@ -19,8 +19,6 @@ export const metadata: Metadata = {
 };
 
 export default async function SnippetDetailPage(props: PageProps<"/snippets/[id]">) {
-  const { id } = await props.params;
-
   return (
     <section className="space-y-4">
       <Breadcrumb>
@@ -40,7 +38,7 @@ export default async function SnippetDetailPage(props: PageProps<"/snippets/[id]
       </Breadcrumb>
 
       <Suspense fallback={<SnippetDetailsPageSkeleton />}>
-        <SnippetDetail id={id} />
+        <SnippetDetail params={props.params} />
       </Suspense>
     </section>
   );

@@ -13,6 +13,8 @@ import { appRoutes } from "@/utils/routes";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
+import { Suspense } from "react";
+import { Skeleton } from "@/ui/skeleton";
 
 export const metadata: Metadata = {
   title: "Edit Snippet",
@@ -20,12 +22,6 @@ export const metadata: Metadata = {
 };
 
 export default async function EditSnippetPage(props: PageProps<"/snippets/[id]/edit">) {
-  const { id } = await props.params;
-  const snippetData = await getSnippet(id);
-
-  if (!snippetData) notFound();
-  const languages = await getAllLanguages();
-
   return (
     <section>
       <Breadcrumb className="mb-2">
@@ -42,7 +38,47 @@ export default async function EditSnippetPage(props: PageProps<"/snippets/[id]/e
         </BreadcrumbList>
       </Breadcrumb>
       <h2 className="text-3xl font-medium mb-4">Update Snippet</h2>
-      <SnippetUpdateForm id={id} snippetData={snippetData} languages={languages} />
+      <Suspense fallback={<FormSkeleton />}>
+        <FormWrapper params={props.params} />
+      </Suspense>
     </section>
+  );
+}
+
+async function FormWrapper({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const snippetData = await getSnippet(id);
+
+  if (!snippetData) notFound();
+  const languages = await getAllLanguages();
+
+  return <SnippetUpdateForm id={id} snippetData={snippetData} languages={languages} />;
+}
+
+function FormSkeleton() {
+  return (
+    <div>
+      <div className="space-y-[20.5px]">
+        <div>
+          <Skeleton className="w-10 h-4.5 mb-2.25" />
+          <Skeleton className="w-full h-8 rounded-lg" />
+        </div>
+        <div>
+          <Skeleton className="w-18 h-4.5 mb-2.25" />
+          <Skeleton className="w-full h-8 rounded-lg" />
+        </div>
+        <div>
+          <Skeleton className="w-10 h-4.5 mb-2.25" />
+          <Skeleton className="w-full h-8 rounded-lg" />
+        </div>
+        <div>
+          <Skeleton className="w-24 h-4.5 mb-2.25" />
+          <Skeleton className="w-full h-60 rounded-lg" />
+        </div>
+      </div>
+      <div>
+        <Skeleton className="w-17 h-8 rounded-lg mt-2" />
+      </div>
+    </div>
   );
 }

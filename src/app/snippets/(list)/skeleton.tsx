@@ -5,13 +5,13 @@ import { Skeleton } from "@/ui/skeleton";
 function SnippetSkeletonCard() {
   return (
     <Card className="w-full cursor-progress">
-      <CardHeader className="gap-2 flex justify-between items-center">
+      <CardHeader className="gap-2">
         <Skeleton className="h-6 w-40" />
         <Skeleton className="h-4 w-20" />
       </CardHeader>
       <Separator />
       <CardContent>
-        <Skeleton className="h-42 w-full" />
+        <Skeleton className="h-50 w-full" />
       </CardContent>
     </Card>
   );

@@ -8,7 +8,7 @@ import {
   PaginationPrevious,
 } from "@/ui/pagination";
 import Link from "next/link";
-import { Button } from "@/ui/button";
+import { Button, buttonVariants } from "@/ui/button";
 import { appRoutes } from "@/utils/routes";
 import { Separator } from "@/ui/separator";
 import { UrlObject } from "node:url";
@@ -26,6 +26,7 @@ import {
   CodeCopyButton,
   searchFiltersSchema,
 } from "@/app/snippets/_components";
+import { SearchFilterParams } from "../_components";
 
 type SnippetListProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -82,27 +83,40 @@ function RenderSnippetList({ snippets }: { snippets: SnippetWithLanguage[] }) {
     <div className="grid gap-3 grid-cols-[repeat(auto-fit,minmax(20rem,1fr))]">
       {snippets.map((snippet) => (
         <Card key={snippet.id} className="gap-0 hover:ring-foreground/25 relative p-0">
-          <CardHeader className="py-4 gap-3">
-            <div className="flex justify-between items-center">
-              <CardTitle className="truncate max-w-3/4" title={snippet.title}>
+          <CardHeader className="flex flex-col py-3 gap-3">
+            <CardTitle className="truncate max-w-3/4" title={snippet.title}>
+              <Link
+                href={appRoutes.snippets.details(snippet.id)}
+                className="font-semibold bg-linear-to-br text-transparent bg-clip-text from-primary to-primary-foreground"
+              >
                 {snippet.title}
-              </CardTitle>
+              </Link>
+            </CardTitle>
+            <div className="flex items-center max-w-full overflow-scroll no-scrollbar">
               <Badge variant="secondary" className="font-mono">
-                {snippet.language.name}
+                <Link
+                  href={{
+                    pathname: appRoutes.home,
+                    query: { [SearchFilterParams.LANGUAGE]: snippet.language.slug },
+                  }}
+                >
+                  {snippet.language.name}
+                </Link>
               </Badge>
+              {snippet.tagsOnSnippets.length > 0 && (
+                <div className="flex gap-1 mx-1">
+                  <Separator orientation="vertical" />
+                  {snippet.tagsOnSnippets.slice(0, 10).map((t) => (
+                    <Badge variant="outline" key={t.tag.id}>
+                      {t.tag.name}
+                    </Badge>
+                  ))}
+                </div>
+              )}
             </div>
-            {/* {snippet.tagsOnSnippets.length > 0 && (
-              <div className="flex gap-1">
-                {snippet.tagsOnSnippets.map((t) => (
-                  <Badge variant="outline" key={t.tag.id}>
-                    {t.tag.name}
-                  </Badge>
-                ))}
-              </div>
-            )} */}
           </CardHeader>
           <Separator />
-          <CardContent className="h-48 p-0 relative">
+          <CardContent className="h-44 p-0 relative">
             <Suspense fallback={<CodeBlockSkeleton />}>
               <CodeBlock lang={snippet.language.shikiLang} className="[&_code]:line-clamp-8">
                 {snippet.code.slice(0, 180)}
@@ -111,11 +125,15 @@ function RenderSnippetList({ snippets }: { snippets: SnippetWithLanguage[] }) {
             <CodeCopyButton code={snippet.code} />
             <div className="w-full absolute bottom-0 left-0 bg-linear-to-b from-card/0 to-card h-18" />
           </CardContent>
-          <Link
-            href={appRoutes.snippets.details(snippet.id)}
-            className="absolute inset-0 h-full hover:bg-muted/20"
-            title={snippet.title}
-          ></Link>
+          <div className="flex justify-end p-3">
+            <Link
+              href={appRoutes.snippets.details(snippet.id)}
+              className={buttonVariants({ variant: "outline", className: "w-fit" })}
+              title={snippet.title}
+            >
+              Detailed...
+            </Link>
+          </div>
         </Card>
       ))}
     </div>

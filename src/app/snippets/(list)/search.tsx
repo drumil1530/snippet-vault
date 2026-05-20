@@ -20,14 +20,15 @@ import { ComboboxItem } from "@/lib/types/shadcn/combobox";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/ui/collapsible";
 import ItemsButtonDropdown from "./items-button";
 import AppTooltip from "@/app/_components/ui/tooltip";
+import { SearchFilterParams } from "../_components";
 
 export default function SnippetSearch({ languages }: { languages: Language[] }) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const params = new URLSearchParams(searchParams.toString());
 
-  const queryParam = searchParams.get("query") || "";
-  const languageParam = searchParams.get("language")?.toLowerCase();
+  const queryParam = searchParams.get(SearchFilterParams.QUERY) || "";
+  const languageParam = searchParams.get(SearchFilterParams.LANGUAGE)?.toLowerCase();
 
   const items = useMemo(
     () =>
@@ -56,13 +57,13 @@ export default function SnippetSearch({ languages }: { languages: Language[] }) 
   function handleSubmit(e: SubmitEvent) {
     e.preventDefault();
 
-    if (searchQuery) params.set("query", searchQuery);
-    else params.delete("query");
+    if (searchQuery) params.set(SearchFilterParams.QUERY, searchQuery);
+    else params.delete(SearchFilterParams.QUERY);
 
-    if (searchLanguage) params.set("language", searchLanguage.value);
-    else params.delete("language");
+    if (searchLanguage) params.set(SearchFilterParams.LANGUAGE, searchLanguage.value);
+    else params.delete(SearchFilterParams.LANGUAGE);
 
-    params.delete("page");
+    params.delete(SearchFilterParams.PAGE);
 
     router.push(appRoutes.home + "?" + params.toString());
   }
@@ -73,7 +74,7 @@ export default function SnippetSearch({ languages }: { languages: Language[] }) 
   }
 
   return (
-    <CollapsibleContainer>
+    <CollapsibleContainer isOpen={params.size > 0}>
       <form onSubmit={handleSubmit} className="flex flex-col md:flex-row gap-1.5 w-full">
         <ButtonGroup className="w-full">
           <InputGroup>
@@ -129,8 +130,11 @@ export default function SnippetSearch({ languages }: { languages: Language[] }) 
   );
 }
 
-function CollapsibleContainer({ children }: { children: ReactNode }) {
-  const [isOpen, setIsOpen] = useState(false);
+function CollapsibleContainer(props: { children: ReactNode; isOpen: boolean }) {
+  const [isOpen, setIsOpen] = useState(props.isOpen);
+
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => setIsOpen(props.isOpen), [props.isOpen]);
 
   return (
     <Collapsible
@@ -149,7 +153,7 @@ function CollapsibleContainer({ children }: { children: ReactNode }) {
           {isOpen ? <ChevronUp /> : <ChevronDown />}
         </CollapsibleTrigger>
       </AppTooltip>
-      <CollapsibleContent className="w-full mt-1">{children}</CollapsibleContent>
+      <CollapsibleContent className="w-full mt-1">{props.children}</CollapsibleContent>
     </Collapsible>
   );
 }

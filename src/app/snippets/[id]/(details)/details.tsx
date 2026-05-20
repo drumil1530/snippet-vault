@@ -11,9 +11,10 @@ import FavoriteButton from "./favorite-button";
 import { Badge } from "@/ui/badge";
 import { EllipsisVertical, PenIcon } from "lucide-react";
 import { CodeBlock, CodeCopyButton } from "@/app/snippets/_components";
+import { SearchFilterParams } from "../../_components";
 
-export default async function SnippetDetail({ id }: { id: string }) {
-  const snippet = await getSnippet(id);
+export default async function SnippetDetail({ params }: { params: Promise<{ id: string }> }) {
+  const snippet = await getSnippet((await params).id);
   if (!snippet) notFound();
 
   const tags = snippet.tagsOnSnippets.map((t) => t.tag);
@@ -28,7 +29,12 @@ export default async function SnippetDetail({ id }: { id: string }) {
             </CardTitle>
 
             <Badge variant="secondary" className="w-fit font-mono">
-              <Link href={{ pathname: appRoutes.home, query: { language: snippet.language.slug } }}>
+              <Link
+                href={{
+                  pathname: appRoutes.home,
+                  query: { [SearchFilterParams.LANGUAGE]: snippet.language.slug },
+                }}
+              >
                 {snippet.language.name}
               </Link>
             </Badge>
