@@ -9,6 +9,7 @@ import { z } from "zod";
 import { SnippetForm, snippetBaseSchema } from "../_components";
 import { resolveUpdateSnippetTags } from "../_services/resolve-tags";
 import { revalidatePath } from "next/cache";
+import { cleanupUnusedTags } from "@/app/tags/services/cleanup-tags";
 
 export async function updateSnippet(
   id: string,
@@ -23,21 +24,24 @@ export async function updateSnippet(
     const { title, languageId, code } = result.data;
     const resolvedTags = await resolveUpdateSnippetTags(result.data.tags, id);
 
-    await prisma.snippet.update({
-      where: { id },
-      data: {
-        languageId,
-        title,
-        code,
-        tagsOnSnippets: {
-          createMany: {
-            data: resolvedTags?.toAdd.map((tagId) => ({ tagId })) || [],
-            skipDuplicates: true,
+    await prisma.$transaction([
+      prisma.snippet.update({
+        where: { id },
+        data: {
+          languageId,
+          title,
+          code,
+          tagsOnSnippets: {
+            createMany: {
+              data: resolvedTags?.toAdd.map((tagId) => ({ tagId })) || [],
+              skipDuplicates: true,
+            },
+            deleteMany: resolvedTags?.toRemove.map((tagId) => ({ tagId })),
           },
-          deleteMany: resolvedTags?.toRemove.map((tagId) => ({ tagId })),
         },
-      },
-    });
+      }),
+      cleanupUnusedTags(),
+    ]);
 
     revalidatePath(appRoutes.snippets.details(id));
     redirect(appRoutes.snippets.details(id));
