@@ -4,4 +4,5 @@ export const SearchFilterParams = {
   ITEMS: "items",
   QUERY: "query",
   LANGUAGE: "language",
+  TAGS: "tags",
 };

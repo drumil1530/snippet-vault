@@ -1,7 +1,6 @@
 "use client";
 
 import { Button, buttonVariants } from "@/ui/button";
-import { ButtonGroup } from "@/ui/button-group";
 import {
   Combobox,
   ComboboxContent as Content,
@@ -9,28 +8,38 @@ import {
   ComboboxInput,
   ComboboxItem as Item,
   ComboboxList as List,
+  ComboboxChip,
+  ComboboxChips,
+  ComboboxChipsInput,
+  ComboboxValue,
+  useComboboxAnchor,
 } from "@/ui/combobox";
 import { Language } from "@/generated/prisma/client";
 import { appRoutes } from "@/utils/routes";
 import { useSearchParams, useRouter } from "next/navigation";
-import { ReactNode, useEffect, useMemo, useState, type SubmitEvent } from "react";
+import {
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  useEffect,
+  useMemo,
+  useState,
+  type SubmitEvent,
+} from "react";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/ui/input-group";
 import { ChevronDown, ChevronUp, EraserIcon, Search } from "lucide-react";
 import { ComboboxItem } from "@/lib/types/shadcn/combobox";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/ui/collapsible";
 import ItemsButtonDropdown from "./items-button";
 import AppTooltip from "@/app/_components/ui/tooltip";
-import { SearchFilterParams } from "../_components";
+import { buildSearchParams, parseSearchFilters, SearchFilters } from "./search-utils";
+import useTagSearch from "@/app/tags/_hooks/useTagSearch";
 
 export default function SnippetSearch({ languages }: { languages: Language[] }) {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const params = new URLSearchParams(searchParams.toString());
 
-  const queryParam = searchParams.get(SearchFilterParams.QUERY) || "";
-  const languageParam = searchParams.get(SearchFilterParams.LANGUAGE)?.toLowerCase();
-
-  const items = useMemo(
+  const languageOptions = useMemo(
     () =>
       languages.map((l) => ({
         id: l.id,
@@ -40,93 +49,134 @@ export default function SnippetSearch({ languages }: { languages: Language[] }) 
     [languages],
   );
 
-  const selectedLanguage = useMemo(
-    () => items.find((i) => i.value === languageParam) ?? null,
-    [items, languageParam],
+  const initialFilters = useMemo(
+    () => parseSearchFilters(searchParams, languageOptions),
+    [searchParams, languageOptions],
   );
 
-  const [searchQuery, setSearchQuery] = useState(queryParam);
-  const [searchLanguage, setSearchLanguage] = useState<ComboboxItem | null>(selectedLanguage);
+  const [filters, setFilters] = useState(initialFilters);
 
   // eslint-disable-next-line react-hooks/set-state-in-effect
-  useEffect(() => setSearchLanguage(selectedLanguage), [selectedLanguage]);
-
-  // eslint-disable-next-line react-hooks/set-state-in-effect
-  useEffect(() => setSearchQuery(queryParam), [queryParam]);
+  useEffect(() => setFilters(initialFilters), [initialFilters]);
 
   function handleSubmit(e: SubmitEvent) {
     e.preventDefault();
+    const params = new URLSearchParams(searchParams);
 
-    if (searchQuery) params.set(SearchFilterParams.QUERY, searchQuery);
-    else params.delete(SearchFilterParams.QUERY);
-
-    if (searchLanguage) params.set(SearchFilterParams.LANGUAGE, searchLanguage.value);
-    else params.delete(SearchFilterParams.LANGUAGE);
-
-    params.delete(SearchFilterParams.PAGE);
-
-    router.push(appRoutes.home + "?" + params.toString());
+    router.push(appRoutes.home + "?" + buildSearchParams(filters, params));
   }
 
   function handleReset() {
-    setSearchLanguage(null);
-    setSearchQuery("");
+    setFilters({
+      query: "",
+      tags: [],
+      language: null,
+    });
   }
 
   return (
-    <CollapsibleContainer isOpen={params.size > 0}>
-      <form onSubmit={handleSubmit} className="flex flex-col md:flex-row gap-1.5 w-full">
-        <ButtonGroup className="w-full">
+    <CollapsibleContainer isOpen={searchParams.size > 0}>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+        <div className="flex gap-2">
           <InputGroup>
             <InputGroupInput
-              value={searchQuery}
+              value={filters.query}
               type="search"
               placeholder="Search..."
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => setFilters((prev) => ({ ...prev, query: e.target.value }))}
             />
             <InputGroupAddon>
               <Search />
             </InputGroupAddon>
           </InputGroup>
+          <Button type="submit" className="cursor-pointer min-w-24">
+            <Search /> Search
+          </Button>
+        </div>
+        <div className="rounded-xl border p-3 space-y-3 bg-card/40 border-border/70">
+          <div className="space-y-2">
+            <p className="text-sm font-medium">Tags</p>
+            <RenderTagsInput filters={filters} setFilters={setFilters} />
+          </div>
 
-          <Combobox
-            items={items}
-            value={searchLanguage}
-            onValueChange={setSearchLanguage}
-            autoHighlight
-          >
-            <ComboboxInput showClear placeholder="Languages" className="min-w-26" />
-            <Content>
-              <Empty>No language found.</Empty>
-
-              <List>
-                {(language: ComboboxItem) => (
-                  <Item key={language.id} value={language}>
-                    {language.label}
-                  </Item>
-                )}
-              </List>
-            </Content>
-          </Combobox>
-        </ButtonGroup>
-        <div className="flex justify-between flex-row-reverse md:flex-row gap-1">
-          <div className="flex gap-1">
-            <Button type="submit" className="cursor-pointer">
-              <Search /> Search
-            </Button>
-            <Button
-              type="reset"
-              variant="destructive"
-              onClick={handleReset}
-              className="cursor-pointer"
+          <div className="space-y-2">
+            <p className="text-sm font-medium">Language</p>
+            <Combobox
+              items={languageOptions}
+              value={filters.language}
+              onValueChange={(v) => setFilters((prev) => ({ ...prev, language: v }))}
+              autoHighlight
             >
+              <ComboboxInput showClear placeholder="Type to search language" className="min-w-26" />
+              <Content>
+                <Empty>No language found.</Empty>
+
+                <List>
+                  {(language: ComboboxItem) => (
+                    <Item key={language.id} value={language}>
+                      {language.label}
+                    </Item>
+                  )}
+                </List>
+              </Content>
+            </Combobox>
+          </div>
+
+          <div className="flex justify-end gap-1">
+            <Button type="reset" variant="ghost" onClick={handleReset} className="cursor-pointer">
               <EraserIcon /> Reset
             </Button>
+            <ItemsButtonDropdown />
           </div>
-          <ItemsButtonDropdown />
         </div>
       </form>
     </CollapsibleContainer>
+  );
+}
+
+interface RenderTagsComboboxProps {
+  filters: SearchFilters;
+  setFilters: Dispatch<SetStateAction<SearchFilters>>;
+}
+
+function RenderTagsInput({ filters, setFilters }: RenderTagsComboboxProps) {
+  const anchor = useComboboxAnchor();
+  const { tags, loading, setInput } = useTagSearch();
+
+  return (
+    <Combobox
+      multiple
+      autoHighlight
+      items={tags}
+      value={filters.tags}
+      onValueChange={(v) => setFilters((prev) => ({ ...prev, tags: v }))}
+    >
+      <ComboboxChips ref={anchor} className="w-full">
+        <ComboboxValue>
+          {(values) => (
+            <>
+              {values.map((value: string) => (
+                <ComboboxChip key={value}>{value}</ComboboxChip>
+              ))}
+              <ComboboxChipsInput
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Search and select multiple tags"
+              />
+            </>
+          )}
+        </ComboboxValue>
+      </ComboboxChips>
+      <Content anchor={anchor}>
+        <Empty>{loading ? "Searching..." : "No tags found."}</Empty>
+        <List>
+          {(item: string[], i) => (
+            <Item key={i} value={item}>
+              {item}
+            </Item>
+          )}
+        </List>
+      </Content>
+    </Combobox>
   );
 }
 

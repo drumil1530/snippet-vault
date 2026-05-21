@@ -8,6 +8,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { SnippetForm, snippetBaseSchema } from "../_components";
 import { resolveUpdateSnippetTags } from "../_services/resolve-tags";
+import { revalidatePath } from "next/cache";
 
 export async function updateSnippet(
   id: string,
@@ -38,6 +39,7 @@ export async function updateSnippet(
       },
     });
 
+    revalidatePath(appRoutes.snippets.details(id));
     redirect(appRoutes.snippets.details(id));
   } else {
     return {

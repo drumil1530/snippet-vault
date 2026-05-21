@@ -62,17 +62,7 @@ export default async function SnippetsList({ searchParams, languages }: SnippetL
           </div>
         </>
       ) : (
-        <p className="text-xl">
-          {filters.query && !filters.language && `No snippets found containing: ${filters.query}`}
-
-          {filters.language &&
-            !filters.query &&
-            `No snippets found for the language: ${languagesMap.get(filters.language)}`}
-
-          {filters.query &&
-            filters.language &&
-            `No snippets found for the language (${languagesMap.get(filters.language)}) having "${filters.query}"`}
-        </p>
+        <p className="text-xl">No Snippet Found!</p>
       )}
     </>
   );
@@ -108,7 +98,14 @@ function RenderSnippetList({ snippets }: { snippets: SnippetWithLanguage[] }) {
                   <Separator orientation="vertical" />
                   {snippet.tagsOnSnippets.slice(0, 10).map((t) => (
                     <Badge variant="outline" key={t.tag.id}>
-                      {t.tag.name}
+                      <Link
+                        href={{
+                          pathname: appRoutes.home,
+                          query: { [SearchFilterParams.TAGS]: t.tag.name },
+                        }}
+                      >
+                        {t.tag.name}
+                      </Link>
                     </Badge>
                   ))}
                 </div>

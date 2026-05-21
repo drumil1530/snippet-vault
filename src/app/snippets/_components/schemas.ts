@@ -10,7 +10,7 @@ export const snippetBaseSchema = z.object({
     error: "Please select proper language from dropdown.",
   }),
   code: z.string().min(1, { error: "Code field should not be empty." }),
-  tags: z.string().transform((data) => (data.length > 1 ? [...new Set(data.split(","))] : [])),
+  tags: z.string().transform((data) => (data.length > 0 ? [...new Set(data.split(","))] : [])),
 });
 
 export const searchFiltersSchema = z.object({
@@ -23,4 +23,9 @@ export const searchFiltersSchema = z.object({
     .transform((d) => Number(d)),
   query: z.string().toLowerCase().optional(),
   language: z.string().toLowerCase().optional(),
+  tags: z
+    .string()
+    .toLowerCase()
+    .transform((d) => (d.length > 0 ? d.split(",") : []))
+    .optional(),
 });

@@ -27,8 +27,7 @@ import { ComboboxItem as ComboboxItemType } from "@/lib/types/shadcn/combobox";
 import { BaseUIEvent } from "@base-ui/react";
 import { Button } from "@/ui/button";
 import { XIcon } from "lucide-react";
-import { appRoutes } from "@/utils/routes";
-import { useDebounce } from "use-debounce";
+import useTagSearch from "@/app/tags/_hooks/useTagSearch";
 
 export interface SnippetForm {
   title?: string;
@@ -162,31 +161,12 @@ type RenderTagsComboboxProps = {
 function RenderTagsCombobox({ state }: RenderTagsComboboxProps) {
   const anchor = useComboboxAnchor();
 
-  async function fetchTags(value: string) {
-    try {
-      const res = await fetch(appRoutes.tags.search(value));
-      const data = await res.json();
-
-      if (Array.isArray(data)) setTags(data);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setLoading(false);
-    }
-  }
   const initialTagString = state.data?.tags ? state.data.tags : "";
-  const [tags, setTags] = useState<string[]>([]);
-  const [loading, setLoading] = useState(false);
   const [selected, setSelected] = useState<string[]>(
     (initialTagString.length > 0 && initialTagString.split(",")) || [],
   );
-  const [input, setInput] = useState("");
 
-  const [debouncedValue] = useDebounce(input, 300);
-
-  useEffect(() => {
-    fetchTags(debouncedValue);
-  }, [debouncedValue]);
+  const { tags, loading, input, setInput, setLoading } = useTagSearch();
 
   function addTag(tag: string) {
     if (!selected.includes(tag) && tag.trim().length > 0)

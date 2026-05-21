@@ -10,7 +10,7 @@ import { searchFiltersSchema } from "../_components/schemas";
 export type SnippetWithLanguage = NonNullable<Awaited<ReturnType<typeof getSnippet>>>;
 
 export async function getAllSnippets(filters: z.infer<typeof searchFiltersSchema>) {
-  const { page, sortBy, items, query, language } = filters;
+  const { page, sortBy, items, query, language, tags } = filters;
 
   const whereInput = {
     ...(query && {
@@ -21,6 +21,13 @@ export async function getAllSnippets(filters: z.infer<typeof searchFiltersSchema
     }),
     ...(language && {
       language: { name: { equals: language, mode: "insensitive" } },
+    }),
+    ...(tags && {
+      tagsOnSnippets: {
+        some: {
+          tag: { name: { in: tags } },
+        },
+      },
     }),
   } satisfies SnippetWhereInput;
 
