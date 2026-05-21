@@ -6,8 +6,8 @@ import { getFormData } from "@/utils/forms";
 import { appRoutes } from "@/utils/routes";
 import { redirect } from "next/navigation";
 import { z } from "zod";
-import { SnippetForm } from "../_components/base-form";
-import { snippetBaseSchema } from "../_components/schemas";
+import { SnippetForm, snippetBaseSchema } from "../_components";
+import { resolveCreateSnippetTags } from "../_services/resolve-tags";
 
 export async function createSnippet(
   _prevState: State<SnippetForm>,
@@ -19,7 +19,7 @@ export async function createSnippet(
 
   if (result.success) {
     const { title, code, languageId } = result.data;
-    const tagsOnSnippet = await getTagsOnSnippet(result.data.tags);
+    const resolvedTagIds = await resolveCreateSnippetTags(result.data.tags);
 
     await prisma.snippet.create({
       data: {
@@ -27,7 +27,7 @@ export async function createSnippet(
         code,
         languageId,
         tagsOnSnippets: {
-          createMany: { data: tagsOnSnippet.map((tagId) => ({ tagId })) },
+          createMany: { data: resolvedTagIds.map((tagId) => ({ tagId })) },
         },
       },
     });
@@ -39,22 +39,4 @@ export async function createSnippet(
       data: parsedData,
     };
   }
-}
-
-async function getTagsOnSnippet(tagsInput: string[]) {
-  const existingTags = await prisma.tag.findMany({
-    where: { name: { in: tagsInput } },
-  });
-
-  const existingTagNames = existingTags.map((t) => t.name);
-  const tagsToCreate = tagsInput.filter((t) => !existingTagNames.includes(t));
-
-  const newTags = await prisma.tag.createManyAndReturn({
-    data: tagsToCreate.map((t) => ({ name: t })),
-    select: { id: true },
-  });
-
-  const tagIdsOnSnippet = [...existingTags.map((t) => t.id), ...newTags.map((t) => t.id)];
-
-  return tagIdsOnSnippet;
 }

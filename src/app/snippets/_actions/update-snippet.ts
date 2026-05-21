@@ -6,8 +6,8 @@ import { getFormData } from "@/utils/forms";
 import { appRoutes } from "@/utils/routes";
 import { redirect } from "next/navigation";
 import { z } from "zod";
-import { SnippetForm } from "../_components/base-form";
-import { snippetBaseSchema } from "../_components/schemas";
+import { SnippetForm, snippetBaseSchema } from "../_components";
+import { resolveUpdateSnippetTags } from "../_services/resolve-tags";
 
 export async function updateSnippet(
   id: string,
@@ -20,7 +20,7 @@ export async function updateSnippet(
 
   if (result.success) {
     const { title, languageId, code } = result.data;
-    const tagsOnSnippet = await getTagsOnSnippetToAddAndRemove(result.data.tags, id);
+    const resolvedTags = await resolveUpdateSnippetTags(result.data.tags, id);
 
     await prisma.snippet.update({
       where: { id },
@@ -29,13 +29,11 @@ export async function updateSnippet(
         title,
         code,
         tagsOnSnippets: {
-          ...(tagsOnSnippet && {
-            createMany: {
-              data: tagsOnSnippet.toAdd.map((tagId) => ({ tagId })),
-              skipDuplicates: true,
-            },
-            deleteMany: tagsOnSnippet.toRemove.map((tagId) => ({ tagId })),
-          }),
+          createMany: {
+            data: resolvedTags?.toAdd.map((tagId) => ({ tagId })) || [],
+            skipDuplicates: true,
+          },
+          deleteMany: resolvedTags?.toRemove.map((tagId) => ({ tagId })),
         },
       },
     });
@@ -47,50 +45,4 @@ export async function updateSnippet(
       data: parsedData,
     };
   }
-}
-
-async function getTagsOnSnippetToAddAndRemove(
-  tagsInput: string[],
-  snippetId: string,
-): Promise<
-  | {
-      toAdd: string[];
-      toRemove: string[];
-    }
-  | undefined
-> {
-  const snippet = await prisma.snippet.findUnique({
-    where: { id: snippetId },
-    select: { tagsOnSnippets: { select: { tag: true } } },
-  });
-  if (!snippet) redirect(appRoutes.home);
-
-  const snippetTagName = snippet.tagsOnSnippets.map((t) => t.tag.name);
-  const isSame =
-    tagsInput.length === snippetTagName.length &&
-    tagsInput.every((tag) => snippetTagName.includes(tag));
-
-  if (isSame) return;
-
-  const newTagsInput = tagsInput.filter((t) => !snippetTagName.includes(t));
-
-  const existingTags = await prisma.tag.findMany({
-    where: { name: { in: newTagsInput } },
-  });
-
-  const existingTagNames = existingTags.map((t) => t.name);
-  const tagsToCreate = newTagsInput.filter((t) => !existingTagNames.includes(t));
-
-  const newTagIds = await prisma.tag.createManyAndReturn({
-    data: tagsToCreate.map((t) => ({ name: t })),
-    select: { id: true },
-  });
-
-  const tagMap = new Map(snippet.tagsOnSnippets.map((t) => [t.tag.name, t.tag.id]));
-  const toAdd = [...existingTags.map((t) => t.id), ...newTagIds.map((t) => t.id)];
-  const toRemove = snippetTagName
-    .filter((t) => !tagsInput.includes(t) && tagMap.has(t))
-    .map((t) => tagMap.get(t)!);
-
-  return { toAdd, toRemove };
 }
