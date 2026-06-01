@@ -7,8 +7,6 @@ import { redirect } from "next/navigation";
 import z from "zod";
 import { searchFiltersSchema } from "../_components/schemas";
 
-export type SnippetWithLanguage = NonNullable<Awaited<ReturnType<typeof getSnippet>>>;
-
 export async function getAllSnippets(filters: z.infer<typeof searchFiltersSchema>) {
   const { page, sortBy, items, query, language, tags } = filters;
 
@@ -53,7 +51,7 @@ export async function getAllSnippets(filters: z.infer<typeof searchFiltersSchema
 }
 
 export async function getSnippet(id: string) {
-  const snippet = await prisma.snippet.findUnique({
+  return prisma.snippet.findUnique({
     where: { id },
     include: {
       language: true,
@@ -63,8 +61,6 @@ export async function getSnippet(id: string) {
       },
     },
   });
-
-  return snippet;
 }
 
 export type SnippetWithLanguageAndTags = NonNullable<Awaited<ReturnType<typeof getSnippet>>>;

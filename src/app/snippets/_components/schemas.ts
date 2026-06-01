@@ -1,5 +1,5 @@
 import { SortOrder } from "@/generated/prisma/internal/prismaNamespace";
-import { z } from "zod";
+import z from "zod";
 
 export const snippetBaseSchema = z.object({
   title: z

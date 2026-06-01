@@ -7,7 +7,6 @@ import Link from "next/link";
 import { appRoutes } from "@/utils/routes";
 import { buttonVariants } from "@/ui/button";
 import DeleteSnippetButton from "./delete-dialog";
-import FavoriteButton from "./favorite-button";
 import { Badge } from "@/ui/badge";
 import { EllipsisVertical, PenIcon } from "lucide-react";
 import { CodeBlock, CodeCopyButton } from "@/app/snippets/_components";
@@ -41,8 +40,6 @@ export default async function SnippetDetail({ params }: { params: Promise<{ id: 
           </div>
 
           <div className="flex items-center gap-1">
-            <FavoriteButton id={snippet.id} isFavorite={snippet.isFavorite} />
-
             <DropdownMenu>
               <DropdownMenuTrigger
                 className={buttonVariants({

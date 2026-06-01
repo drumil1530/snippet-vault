@@ -16,7 +16,6 @@ model Snippet {
   id             String           @id @default(cuid())
   title          String
   code           String
-  isFavorite     Boolean          @default(false)
   languageId     String
   language       Language         @relation(fields: [languageId], references: [id])
   tagsOnSnippets TagsOnSnippets[]

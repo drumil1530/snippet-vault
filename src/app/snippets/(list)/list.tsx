@@ -19,7 +19,7 @@ import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { Badge } from "@/ui/badge";
 import z from "zod";
-import { getAllSnippets, SnippetWithLanguage } from "@/app/snippets/_actions";
+import { getAllSnippets, SnippetWithLanguageAndTags } from "@/app/snippets/_actions";
 import {
   CodeBlock,
   CodeBlockSkeleton,
@@ -68,7 +68,7 @@ export default async function SnippetsList({ searchParams, languages }: SnippetL
   );
 }
 
-function RenderSnippetList({ snippets }: { snippets: SnippetWithLanguage[] }) {
+function RenderSnippetList({ snippets }: { snippets: SnippetWithLanguageAndTags[] }) {
   return (
     <div className="grid gap-3 grid-cols-[repeat(auto-fit,minmax(20rem,1fr))]">
       {snippets.map((snippet) => (

@@ -5,7 +5,7 @@ import { State } from "@/lib/types/utilities";
 import { getFormData } from "@/utils/forms";
 import { appRoutes } from "@/utils/routes";
 import { redirect } from "next/navigation";
-import { z } from "zod";
+import z from "zod";
 import { SnippetForm, snippetBaseSchema } from "../_components";
 import { resolveCreateSnippetTags } from "../_services/resolve-tags";
 

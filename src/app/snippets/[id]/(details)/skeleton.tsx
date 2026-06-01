@@ -14,8 +14,7 @@ export default function SnippetDetailsPageSkeleton() {
           </div>
 
           <div className="flex items-center gap-2">
-            <Skeleton className="size-9 rounded-md" />
-            <Skeleton className="size-9 rounded-md" />
+            <Skeleton className="size-8 rounded-md" />
           </div>
         </div>
 
