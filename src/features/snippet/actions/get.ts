@@ -1,6 +1,10 @@
 "use server";
 
-import { SnippetInclude, SnippetWhereInput } from "@/generated/prisma/models";
+import {
+  SnippetInclude,
+  SnippetOrderByWithRelationInput,
+  SnippetWhereInput,
+} from "@/generated/prisma/models";
 import prisma from "@/lib/prisma-client";
 import { appRoutes } from "@/utils/routes";
 import { redirect } from "next/navigation";
@@ -33,10 +37,15 @@ export async function getAllSnippets(filters: z.infer<typeof searchFiltersSchema
 
   if (length > 1 && (page < 1 || page > length)) redirect(appRoutes.home);
 
+  const orderBy = {
+    newest: { updatedAt: "desc" as const },
+    oldest: { updatedAt: "asc" as const },
+  }[sortBy] satisfies SnippetOrderByWithRelationInput;
+
   const snippets = await prisma.snippet.findMany({
     take: items,
     skip: (page - 1) * items,
-    orderBy: [{ updatedAt: sortBy }, { id: "desc" }],
+    orderBy: [orderBy, { id: "desc" }],
     where: whereInput,
     include: snipppetInclude,
   });

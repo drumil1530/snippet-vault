@@ -2,6 +2,7 @@ import { ComboboxItem } from "@/lib/types/shadcn/combobox";
 import { ReadonlyURLSearchParams } from "next/navigation";
 import { SearchFilterParams } from "@/features/snippet/constants";
 import { setOrDeleteParam } from "@/utils/search-params";
+import { searchFiltersSchema } from "../../schemas";
 
 export type SearchFilters = {
   query: string;
@@ -13,16 +14,17 @@ export function parseSearchFilters(
   searchParams: ReadonlyURLSearchParams,
   languages: ComboboxItem[],
 ): SearchFilters {
-  const queryParam = searchParams.get(SearchFilterParams.QUERY) || "";
-  const languageParam = searchParams.get(SearchFilterParams.LANGUAGE)?.toLowerCase();
-  const tagsParam = searchParams.get(SearchFilterParams.TAGS)?.toLowerCase() || "";
-  const tagsParamArray = tagsParam.length > 0 ? tagsParam.split(",") : [];
-  const selectedLanguage = languages.find((i) => i.value === languageParam) ?? null;
+  const { query, language, tags } = searchFiltersSchema.parse({
+    query: searchParams.get(SearchFilterParams.QUERY) ?? undefined,
+    language: searchParams.get(SearchFilterParams.LANGUAGE) ?? undefined,
+    tags: searchParams.get(SearchFilterParams.TAGS) ?? undefined,
+  });
+  const selectedLanguage = languages.find((i) => i.value === language) ?? null;
 
   return {
-    query: queryParam,
+    query: query || "",
     language: selectedLanguage,
-    tags: tagsParamArray,
+    tags: tags || [],
   };
 }
 

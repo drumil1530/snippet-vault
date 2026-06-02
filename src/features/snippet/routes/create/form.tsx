@@ -6,6 +6,7 @@ import { useActionState } from "react";
 import { Language } from "@/generated/prisma/client";
 import { SnippetBaseForm, SnippetForm } from "@/features/snippet/components";
 import { createSnippet } from "@/features/snippet/actions";
+import { Spinner } from "@/ui/spinner";
 
 type SnippetCreateFormProps = {
   languages: Language[];
@@ -18,9 +19,17 @@ export default function SnippetCreateForm({ languages }: SnippetCreateFormProps)
   return (
     <form action={formAction}>
       <SnippetBaseForm state={state} languages={languages} />
+
       <div className="mt-2">
         <Button type="submit" className="ms-1" disabled={isPending}>
-          {isPending ? "Creating" : "Create"}
+          {isPending ? (
+            <>
+              <Spinner />
+              {"Creating"}
+            </>
+          ) : (
+            "Create"
+          )}
         </Button>
       </div>
     </form>

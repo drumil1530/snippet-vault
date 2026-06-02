@@ -6,6 +6,7 @@ import { Button } from "@/ui/button";
 import { State } from "@/lib/types/utilities";
 import { useActionState } from "react";
 import { Language } from "@/generated/prisma/client";
+import { Spinner } from "@/ui/spinner";
 
 type SnippetUpdateFormProps = {
   id: string;
@@ -28,9 +29,17 @@ export default function SnippetUpdateForm({ id, snippetData, languages }: Snippe
   return (
     <form action={formAction}>
       <SnippetBaseForm state={state} languages={languages} />
+
       <div className="mt-2 flex gap-1">
         <Button type="submit" disabled={isPending}>
-          {isPending ? "Updating" : "Update"}
+          {isPending ? (
+            <>
+              <Spinner />
+              {"Updating"}
+            </>
+          ) : (
+            "Update"
+          )}
         </Button>
       </div>
     </form>

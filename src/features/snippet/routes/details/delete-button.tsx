@@ -20,7 +20,7 @@ export default function DeleteButton({ id }: { id: string }) {
           toast.success("Snippet deleted successfully!", {
             position: "top-center",
           });
-          router.push(appRoutes.home);
+          router.replace(appRoutes.home);
         }}
       >
         Confirm

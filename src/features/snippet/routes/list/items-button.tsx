@@ -44,10 +44,11 @@ export default function ItemsButtonDropdown() {
         </Trigger>
       </ButtonGroup>
       <Content className="min-w-auto">
-        <Item onClick={() => handleClick(3)}>3</Item>
-        <Item onClick={() => handleClick(6)}>6</Item>
-        <Item onClick={() => handleClick(9)}>9</Item>
-        <Item onClick={() => handleClick(12)}>12</Item>
+        {[3, 6, 9, 12].map((i) => (
+          <Item key={i} onClick={() => handleClick(i)} disabled={items === i}>
+            {i}
+          </Item>
+        ))}
       </Content>
     </DropdownMenu>
   );

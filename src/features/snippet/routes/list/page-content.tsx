@@ -137,7 +137,7 @@ function SnippetPagination(filters: z.infer<typeof searchFiltersSchema> & { leng
   const { page, sortBy, items, query, language, length } = filters;
 
   const queryInputs = {
-    ...(sortBy !== "desc" && { sortBy }),
+    ...(sortBy !== "newest" && { sortBy }),
     ...(query && { query }),
     ...(language && { language }),
     ...(items !== 6 && { items }),
