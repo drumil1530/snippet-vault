@@ -31,9 +31,9 @@ import { ChevronDown, ChevronUp, EraserIcon, Search } from "lucide-react";
 import { ComboboxItem } from "@/lib/types/shadcn/combobox";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/ui/collapsible";
 import ItemsButtonDropdown from "./items-button";
-import AppTooltip from "@/app/_components/ui/tooltip";
 import { buildSearchParams, parseSearchFilters, SearchFilters } from "./search-utils";
-import useTagSearch from "@/app/tags/_hooks/useTagSearch";
+import useTagSearch from "@/features/tag/hooks/useTagSearch";
+import AppTooltip from "@/components/app/tooltip";
 
 export default function SnippetSearch({ languages }: { languages: Language[] }) {
   const searchParams = useSearchParams();

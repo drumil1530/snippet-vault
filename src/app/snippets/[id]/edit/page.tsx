@@ -1,6 +1,3 @@
-import SnippetUpdateForm from "./form";
-import { getAllLanguages } from "@/app/languages/_actions/get-languages";
-import { getSnippet } from "@/app/snippets/_actions/get-snippets";
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -15,6 +12,9 @@ import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { Suspense } from "react";
 import { Skeleton } from "@/ui/skeleton";
+import { getSnippet } from "@/features/snippet/actions";
+import { getAllLanguages } from "@/features/language/actions/get-languages";
+import SnippetUpdateForm from "@/features/snippet/routes/edit/form";
 
 export const metadata: Metadata = {
   title: "Edit Snippet",

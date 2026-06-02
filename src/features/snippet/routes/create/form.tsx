@@ -1,11 +1,11 @@
 "use client";
 
-import { createSnippet } from "@/app/snippets/_actions/create-snippet";
-import { SnippetBaseForm, SnippetForm } from "../_components/base-form";
 import { Button } from "@/ui/button";
 import { State } from "@/lib/types/utilities";
 import { useActionState } from "react";
 import { Language } from "@/generated/prisma/client";
+import { SnippetBaseForm, SnippetForm } from "@/features/snippet/components";
+import { createSnippet } from "@/features/snippet/actions";
 
 type SnippetCreateFormProps = {
   languages: Language[];

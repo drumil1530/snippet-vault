@@ -1,12 +1,11 @@
 "use client";
 
-import { updateSnippet } from "@/app/snippets/_actions/update-snippet";
-import { SnippetBaseForm, SnippetForm } from "@/app/snippets/_components";
+import { SnippetWithLanguageAndTags, updateSnippet } from "@/features/snippet/actions";
+import { SnippetBaseForm, SnippetForm } from "@/features/snippet/components";
 import { Button } from "@/ui/button";
 import { State } from "@/lib/types/utilities";
 import { useActionState } from "react";
 import { Language } from "@/generated/prisma/client";
-import { SnippetWithLanguageAndTags } from "@/app/snippets/_actions";
 
 type SnippetUpdateFormProps = {
   id: string;

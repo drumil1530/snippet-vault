@@ -27,7 +27,7 @@ import { ComboboxItem as ComboboxItemType } from "@/lib/types/shadcn/combobox";
 import { BaseUIEvent } from "@base-ui/react";
 import { Button } from "@/ui/button";
 import { XIcon } from "lucide-react";
-import useTagSearch from "@/app/tags/_hooks/useTagSearch";
+import useTagSearch from "@/features/tag/hooks/useTagSearch";
 
 export interface SnippetForm {
   title?: string;

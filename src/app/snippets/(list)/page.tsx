@@ -1,8 +1,8 @@
+import { getAllLanguages } from "@/features/language/actions/get-languages";
+import SnippetsList from "@/features/snippet/routes/list/page-content";
+import SnippetSearch from "@/features/snippet/routes/list/search";
+import { SnippetsListSkeleton } from "@/features/snippet/routes/list/skeleton";
 import { Button } from "@/ui/button";
-import SnippetsList from "./list";
-import SnippetSearch from "./search";
-import { SnippetsListSkeleton } from "./skeleton";
-import { getAllLanguages } from "@/app/languages/_actions/get-languages";
 import { Metadata } from "next";
 import { Suspense } from "react";
 

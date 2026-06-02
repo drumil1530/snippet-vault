@@ -7,11 +7,11 @@ import {
   BreadcrumbPage,
 } from "@/ui/breadcrumb";
 import { appRoutes } from "@/utils/routes";
-import SnippetDetail from "./details";
-import SnippetDetailsPageSkeleton from "./skeleton";
 import { Suspense } from "react";
 import Link from "next/link";
 import { Metadata } from "next";
+import SnippetDetailsPageSkeleton from "@/features/snippet/routes/details/skeleton";
+import SnippetDetail from "@/features/snippet/routes/details/page-content";
 
 export const metadata: Metadata = {
   title: "Snippet Details",

@@ -1,6 +1,6 @@
 "use client";
 
-import ThemeProvider from "@/app/_components/theme/theme-provider";
+import ThemeProvider from "./theme/theme-provider";
 import { ReactNode } from "react";
 import { TooltipProvider } from "@/ui/tooltip";
 import MainContent from "./main-content";

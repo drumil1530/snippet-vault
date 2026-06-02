@@ -1,6 +1,6 @@
 import { ComboboxItem } from "@/lib/types/shadcn/combobox";
 import { ReadonlyURLSearchParams } from "next/navigation";
-import { SearchFilterParams } from "../_components";
+import { SearchFilterParams } from "@/features/snippet/constants";
 import { setOrDeleteParam } from "@/utils/search-params";
 
 export type SearchFilters = {

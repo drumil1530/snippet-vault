@@ -1,4 +1,4 @@
-import { getSnippet } from "@/app/snippets/_actions";
+import { getSnippet } from "@/features/snippet/actions";
 import { notFound } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/ui/card";
 import { Separator } from "@/ui/separator";
@@ -9,8 +9,8 @@ import { buttonVariants } from "@/ui/button";
 import DeleteSnippetButton from "./delete-dialog";
 import { Badge } from "@/ui/badge";
 import { EllipsisVertical, PenIcon } from "lucide-react";
-import { CodeBlock, CodeCopyButton } from "@/app/snippets/_components";
-import { SearchFilterParams } from "../../_components";
+import { CodeBlock, CodeCopyButton } from "@/features/snippet/components";
+import { SearchFilterParams } from "@/features/snippet/constants";
 
 export default async function SnippetDetail({ params }: { params: Promise<{ id: string }> }) {
   const snippet = await getSnippet((await params).id);

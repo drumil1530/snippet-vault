@@ -1,11 +1,11 @@
 "use server";
 
-import { SnippetWhereInput } from "@/generated/prisma/models";
+import { SnippetInclude, SnippetWhereInput } from "@/generated/prisma/models";
 import prisma from "@/lib/prisma-client";
 import { appRoutes } from "@/utils/routes";
 import { redirect } from "next/navigation";
 import z from "zod";
-import { searchFiltersSchema } from "../_components/schemas";
+import { searchFiltersSchema } from "@/features/snippet/schemas";
 
 export async function getAllSnippets(filters: z.infer<typeof searchFiltersSchema>) {
   const { page, sortBy, items, query, language, tags } = filters;
@@ -38,13 +38,7 @@ export async function getAllSnippets(filters: z.infer<typeof searchFiltersSchema
     skip: (page - 1) * items,
     orderBy: [{ updatedAt: sortBy }, { id: "desc" }],
     where: whereInput,
-    include: {
-      language: true,
-      tagsOnSnippets: {
-        omit: { tagId: true, snippetId: true },
-        include: { tag: true },
-      },
-    },
+    include: snipppetInclude,
   });
 
   return { snippets, length };
@@ -53,14 +47,16 @@ export async function getAllSnippets(filters: z.infer<typeof searchFiltersSchema
 export async function getSnippet(id: string) {
   return prisma.snippet.findUnique({
     where: { id },
-    include: {
-      language: true,
-      tagsOnSnippets: {
-        omit: { tagId: true, snippetId: true },
-        include: { tag: true },
-      },
-    },
+    include: snipppetInclude,
   });
 }
+
+const snipppetInclude = {
+  language: true,
+  tagsOnSnippets: {
+    omit: { tagId: true, snippetId: true },
+    include: { tag: true },
+  },
+} satisfies SnippetInclude;
 
 export type SnippetWithLanguageAndTags = NonNullable<Awaited<ReturnType<typeof getSnippet>>>;

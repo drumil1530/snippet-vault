@@ -9,7 +9,7 @@ import {
   DropdownMenuItem as Item,
   DropdownMenuTrigger as Trigger,
 } from "@/ui/dropdown-menu";
-import AppTooltip from "../ui/tooltip";
+import AppTooltip from "@/components/app/tooltip";
 
 export function ThemeToggle() {
   const { setTheme } = useTheme();

@@ -6,10 +6,11 @@ import { getFormData } from "@/utils/forms";
 import { appRoutes } from "@/utils/routes";
 import { redirect } from "next/navigation";
 import z from "zod";
-import { SnippetForm, snippetBaseSchema } from "../_components";
-import { resolveUpdateSnippetTags } from "../_services/resolve-tags";
 import { revalidatePath } from "next/cache";
-import { cleanupUnusedTags } from "@/app/tags/services/cleanup-tags";
+import { SnippetForm } from "@/features/snippet/components";
+import { snippetBaseSchema } from "@/features/snippet/schemas";
+import { resolveUpdateSnippetTags } from "@/features/snippet/services/resolve-tags";
+import { cleanupUnusedTags } from "@/features/tag/services/cleanup-tags";
 
 export async function updateSnippet(
   id: string,

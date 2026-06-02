@@ -6,8 +6,9 @@ import { getFormData } from "@/utils/forms";
 import { appRoutes } from "@/utils/routes";
 import { redirect } from "next/navigation";
 import z from "zod";
-import { SnippetForm, snippetBaseSchema } from "../_components";
-import { resolveCreateSnippetTags } from "../_services/resolve-tags";
+import { SnippetForm } from "@/features/snippet/components";
+import { snippetBaseSchema } from "@/features/snippet/schemas";
+import { resolveCreateSnippetTags } from "@/features/snippet/services/resolve-tags";
 
 export async function createSnippet(
   _prevState: State<SnippetForm>,

@@ -8,9 +8,9 @@ import {
 } from "@/ui/breadcrumb";
 import { appRoutes } from "@/utils/routes";
 import Link from "next/link";
-import SnippetCreateForm from "./form";
-import { getAllLanguages } from "@/app/languages/_actions/get-languages";
 import { Metadata } from "next";
+import { getAllLanguages } from "@/features/language/actions/get-languages";
+import SnippetCreateForm from "@/features/snippet/routes/create/form";
 
 export const metadata: Metadata = {
   title: "New Snippet",

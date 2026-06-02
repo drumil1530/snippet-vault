@@ -19,14 +19,10 @@ import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { Badge } from "@/ui/badge";
 import z from "zod";
-import { getAllSnippets, SnippetWithLanguageAndTags } from "@/app/snippets/_actions";
-import {
-  CodeBlock,
-  CodeBlockSkeleton,
-  CodeCopyButton,
-  searchFiltersSchema,
-} from "@/app/snippets/_components";
-import { SearchFilterParams } from "../_components";
+import { getAllSnippets, SnippetWithLanguageAndTags } from "@/features/snippet/actions";
+import { CodeBlock, CodeBlockSkeleton, CodeCopyButton } from "@/features/snippet/components";
+import { searchFiltersSchema } from "@/features/snippet/schemas";
+import { SearchFilterParams } from "@/features/snippet/constants";
 
 type SnippetListProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
