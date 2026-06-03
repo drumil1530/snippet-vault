@@ -9,4 +9,6 @@ export const appRoutes = {
   tags: {
     search: (query: string) => `/tags?query=${query}` as const,
   },
+  login: "/login" as const,
+  register: "/register" as const,
 };
