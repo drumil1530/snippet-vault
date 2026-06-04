@@ -1,5 +1,3 @@
-"use client";
-
 import ThemeProvider from "./theme/theme-provider";
 import { ReactNode } from "react";
 import { TooltipProvider } from "@/ui/tooltip";

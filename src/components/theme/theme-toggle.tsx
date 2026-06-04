@@ -9,14 +9,14 @@ import {
   DropdownMenuItem as Item,
   DropdownMenuTrigger as Trigger,
 } from "@/ui/dropdown-menu";
-import AppTooltip from "@/components/app/tooltip";
+import AppTooltip from "@/components/custom-ui/tooltip";
 
 export function ThemeToggle() {
   const { setTheme } = useTheme();
 
   return (
     <DropdownMenu>
-      <AppTooltip content="Toggle Theme" side="left">
+      <AppTooltip content="Toggle Theme">
         <Trigger className={buttonVariants({ variant: "outline", size: "icon" })}>
           <Sun className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
           <Moon className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />

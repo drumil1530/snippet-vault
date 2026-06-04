@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/ui/button";
-import { State } from "@/lib/types/utilities";
+import { State } from "@/lib/types/action-state";
 import { useActionState } from "react";
 import { Language } from "@/generated/prisma/client";
 import { SnippetBaseForm, SnippetForm } from "@/features/snippet/components";

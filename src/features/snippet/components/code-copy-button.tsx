@@ -1,6 +1,6 @@
 "use client";
 
-import AppTooltip from "@/components/app/tooltip";
+import AppTooltip from "@/components/custom-ui/tooltip";
 import { Button } from "@/ui/button";
 import { cn } from "@/utils/cn";
 import { ClassValue } from "clsx";

@@ -2,7 +2,7 @@ import { appRoutes } from "@/utils/routes";
 import { Metadata } from "next";
 import { getAllLanguages } from "@/features/language/actions/get-languages";
 import SnippetCreateForm from "@/features/snippet/routes/create/form";
-import AppBreadcrumb from "@/components/app/breadcrumb";
+import AppBreadcrumb from "@/components/custom-ui/breadcrumb";
 
 export const metadata: Metadata = {
   title: "New Snippet",

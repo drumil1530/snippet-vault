@@ -4,7 +4,7 @@ import { Field, FieldError, FieldGroup, FieldLabel } from "@/ui/field";
 import { Input } from "@/ui/input";
 import { Textarea } from "@/ui/textarea";
 import { Language } from "@/generated/prisma/client";
-import { State } from "@/lib/types/utilities";
+import { State } from "@/lib/types/action-state";
 import { useState, useEffect, KeyboardEvent, ChangeEvent } from "react";
 import {
   Combobox,

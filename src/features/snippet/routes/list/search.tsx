@@ -33,7 +33,8 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/ui/collap
 import ItemsButtonDropdown from "./items-button";
 import { buildSearchParams, parseSearchFilters, SearchFilters } from "./search-utils";
 import useTagSearch from "@/features/tag/hooks/useTagSearch";
-import AppTooltip from "@/components/app/tooltip";
+import AppTooltip from "@/components/custom-ui/tooltip";
+import { SearchFilterParams } from "../../constants";
 
 export default function SnippetSearch({ languages }: { languages: Language[] }) {
   const searchParams = useSearchParams();
@@ -74,8 +75,14 @@ export default function SnippetSearch({ languages }: { languages: Language[] }) 
     });
   }
 
+  const isOpen =
+    searchParams
+      .keys()
+      .toArray()
+      .filter((k) => k !== SearchFilterParams.ITEMS && k !== SearchFilterParams.PAGE).length > 0;
+
   return (
-    <CollapsibleContainer isOpen={searchParams.size > 0}>
+    <CollapsibleContainer isOpen={isOpen}>
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
         <div className="flex gap-2">
           <InputGroup>

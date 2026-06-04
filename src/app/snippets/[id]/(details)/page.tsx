@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import { Metadata } from "next";
 import SnippetDetailsPageSkeleton from "@/features/snippet/routes/details/skeleton";
 import SnippetDetail from "@/features/snippet/routes/details/page-content";
-import AppBreadcrumb from "@/components/app/breadcrumb";
+import AppBreadcrumb from "@/components/custom-ui/breadcrumb";
 
 export const metadata: Metadata = {
   title: "Snippet Details",

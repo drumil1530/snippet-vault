@@ -1,4 +1,4 @@
-import AppBreadcrumb from "@/components/app/breadcrumb";
+import AppBreadcrumb from "@/components/custom-ui/breadcrumb";
 import { getAllLanguages } from "@/features/language/actions/get-languages";
 import { appRoutes } from "@/utils/routes";
 import { notFound } from "next/navigation";
