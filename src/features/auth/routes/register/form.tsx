@@ -17,7 +17,7 @@ export interface RegisterForm {
 }
 
 export default function RegisterForm() {
-  const initialState: State<RegisterForm> = { data: {} };
+  const initialState: State<RegisterForm> = { data: { name: "", email: "", password: "" } };
   const [state, formAction, isPending] = useActionState(register, initialState);
   const [open, setOpen] = useState(false);
 
@@ -47,7 +47,7 @@ export default function RegisterForm() {
           />
           <FieldError>{state.errors?.properties?.email?.errors[0]}</FieldError>
         </Field>
-        <Field>
+        <Field data-invalid={state.errors?.properties?.password ? true : false}>
           <FieldLabel htmlFor="password">Password</FieldLabel>
           <InputGroup>
             <InputGroupInput

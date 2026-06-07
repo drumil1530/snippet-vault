@@ -60,6 +60,18 @@ export async function getSnippet(id: string) {
   });
 }
 
+export async function getSnippetMetadata(id: string) {
+  return prisma.snippet.findUnique({
+    where: { id },
+    select: {
+      title: true,
+      language: {
+        select: { name: true },
+      },
+    },
+  });
+}
+
 const snipppetInclude = {
   language: true,
   tagsOnSnippets: {

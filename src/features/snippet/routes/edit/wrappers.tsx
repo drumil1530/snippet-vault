@@ -18,7 +18,7 @@ export async function BreadcrumbWrapper({ params }: WrapperProps) {
         { href: appRoutes.home, label: "Home" },
         { href: appRoutes.snippets.details(id), label: "Snippet Details" },
       ]}
-      page="Update Snippet"
+      page="Edit Snippet"
     />
   );
 }

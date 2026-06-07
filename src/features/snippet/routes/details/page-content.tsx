@@ -1,4 +1,4 @@
-import { getSnippet } from "@/features/snippet/actions";
+import { getSnippet, SnippetWithLanguageAndTags } from "@/features/snippet/actions";
 import { notFound } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/ui/card";
 import { Separator } from "@/ui/separator";
@@ -11,8 +11,11 @@ import { Badge } from "@/ui/badge";
 import { EllipsisVertical, PenIcon } from "lucide-react";
 import { CodeBlock, CodeCopyButton } from "@/features/snippet/components";
 import { SearchFilterParams } from "@/features/snippet/constants";
+import { getSession } from "@/features/auth/actions/session";
 
 export default async function SnippetDetail({ params }: { params: Promise<{ id: string }> }) {
+  const session = await getSession();
+
   const snippet = await getSnippet((await params).id);
   if (!snippet) notFound();
 
@@ -39,37 +42,21 @@ export default async function SnippetDetail({ params }: { params: Promise<{ id: 
             </Badge>
           </div>
 
-          <div className="flex items-center gap-1">
-            <DropdownMenu>
-              <DropdownMenuTrigger
-                className={buttonVariants({
-                  variant: "secondary",
-                  size: "icon",
-                })}
-              >
-                <EllipsisVertical className="size-5" />
-              </DropdownMenuTrigger>
-
-              <DropdownMenuContent align="end" className="w-fit min-w-24 flex flex-col gap-1">
-                <Link
-                  href={appRoutes.snippets.edit(snippet.id)}
-                  className={buttonVariants({ variant: "secondary" })}
-                >
-                  <PenIcon />
-                  Edit
-                </Link>
-
-                <DeleteSnippetButton id={snippet.id} />
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
+          {session && <SnippetActions snippet={snippet} />}
         </div>
 
         {tags.length > 0 && (
           <div className="flex flex-wrap gap-2">
             {tags.map((tag) => (
               <Badge variant="outline" key={tag.id}>
-                {tag.name}
+                <Link
+                  href={{
+                    pathname: appRoutes.home,
+                    query: { [SearchFilterParams.TAGS]: tag.name },
+                  }}
+                >
+                  {tag.name}
+                </Link>
               </Badge>
             ))}
           </div>
@@ -89,5 +76,34 @@ export default async function SnippetDetail({ params }: { params: Promise<{ id: 
         <CodeCopyButton code={snippet.code} className="top-5 right-5" />
       </CardContent>
     </Card>
+  );
+}
+
+function SnippetActions({ snippet }: { snippet: SnippetWithLanguageAndTags }) {
+  return (
+    <div className="flex items-center gap-1">
+      <DropdownMenu>
+        <DropdownMenuTrigger
+          className={buttonVariants({
+            variant: "secondary",
+            size: "icon",
+          })}
+        >
+          <EllipsisVertical className="size-5" />
+        </DropdownMenuTrigger>
+
+        <DropdownMenuContent align="end" className="w-fit min-w-24 flex flex-col gap-1">
+          <Link
+            href={appRoutes.snippets.edit(snippet.id)}
+            className={buttonVariants({ variant: "secondary" })}
+          >
+            <PenIcon />
+            Edit
+          </Link>
+
+          <DeleteSnippetButton id={snippet.id} />
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
   );
 }

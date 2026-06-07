@@ -7,6 +7,7 @@ import { Language } from "@/generated/prisma/client";
 import { SnippetBaseForm, SnippetForm } from "@/features/snippet/components";
 import { createSnippet } from "@/features/snippet/actions";
 import { Spinner } from "@/ui/spinner";
+import { Plus } from "lucide-react";
 
 type SnippetCreateFormProps = {
   languages: Language[];
@@ -28,7 +29,10 @@ export default function SnippetCreateForm({ languages }: SnippetCreateFormProps)
               {"Creating"}
             </>
           ) : (
-            "Create"
+            <>
+              <Plus />
+              {"Create"}
+            </>
           )}
         </Button>
       </div>

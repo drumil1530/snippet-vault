@@ -28,7 +28,7 @@ export default function UserMenu({ session }: ProfileButtonProps) {
     <DropdownMenu>
       <AppTooltip content="Profile">
         <DropdownMenuTrigger className={buttonVariants({ variant: "outline", size: "icon" })}>
-          {session?.user.name.charAt(0).toUpperCase() ?? <User className="size-1.5" />}
+          {session?.user.name.charAt(0).toUpperCase() ?? <User className="size-4" />}
         </DropdownMenuTrigger>
       </AppTooltip>
       <DropdownMenuContent align="end" className="min-w-fit">

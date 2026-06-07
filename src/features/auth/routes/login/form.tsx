@@ -3,7 +3,7 @@
 import { State } from "@/lib/types/action-state";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/ui/field";
 import { Spinner } from "@/ui/spinner";
-import { Eye, EyeOff, UserPlusIcon } from "lucide-react";
+import { Eye, EyeOff, LogInIcon } from "lucide-react";
 import { useActionState, useState } from "react";
 import { login } from "../../actions/login";
 import { Input } from "@/ui/input";
@@ -16,7 +16,7 @@ export interface LoginForm {
 }
 
 export default function LoginForm() {
-  const initialState: State<LoginForm> = { data: {} };
+  const initialState: State<LoginForm> = { data: { email: "", password: "" } };
   const [state, formAction, isPending] = useActionState(login, initialState);
   const [open, setOpen] = useState(false);
 
@@ -35,7 +35,7 @@ export default function LoginForm() {
           />
           <FieldError>{state.errors?.properties?.email?.errors[0]}</FieldError>
         </Field>
-        <Field>
+        <Field data-invalid={state.errors?.properties?.password ? true : false}>
           <FieldLabel htmlFor="password">Password</FieldLabel>
           <InputGroup>
             <InputGroupInput
@@ -69,7 +69,7 @@ export default function LoginForm() {
           </>
         ) : (
           <>
-            <UserPlusIcon />
+            <LogInIcon />
             {"Login"}
           </>
         )}

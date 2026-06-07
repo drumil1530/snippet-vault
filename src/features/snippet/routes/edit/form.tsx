@@ -7,6 +7,7 @@ import { State } from "@/lib/types/action-state";
 import { useActionState } from "react";
 import { Language } from "@/generated/prisma/client";
 import { Spinner } from "@/ui/spinner";
+import { Pen } from "lucide-react";
 
 type SnippetUpdateFormProps = {
   id: string;
@@ -38,7 +39,10 @@ export default function SnippetUpdateForm({ id, snippetData, languages }: Snippe
               {"Updating"}
             </>
           ) : (
-            "Update"
+            <>
+              <Pen />
+              {"Update"}
+            </>
           )}
         </Button>
       </div>

@@ -8,7 +8,7 @@ import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Explore Snippets",
-  description: "Explore the latest code snippets",
+  description: "Browse and discover code snippets shared in Snippet Vault.",
 };
 
 export default async function SnippetsPage(props: PageProps<"/snippets">) {

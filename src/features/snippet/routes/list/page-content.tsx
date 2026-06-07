@@ -68,12 +68,18 @@ function RenderSnippetList({ snippets }: { snippets: SnippetWithLanguageAndTags[
   return (
     <div className="grid gap-3 grid-cols-[repeat(auto-fit,minmax(20rem,1fr))]">
       {snippets.map((snippet) => (
-        <Card key={snippet.id} className="gap-0 hover:ring-foreground/25 relative p-0">
-          <CardHeader className="flex flex-col py-3 gap-3">
-            <CardTitle className="truncate max-w-3/4" title={snippet.title}>
+        <Card
+          key={snippet.id}
+          className="gap-0 p-0 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg hover:border-primary/25"
+        >
+          <CardHeader className="flex flex-col gap-2 py-3">
+            <CardTitle
+              className="truncate text-lg font-semibold leading-tight"
+              title={snippet.title}
+            >
               <Link
                 href={appRoutes.snippets.details(snippet.id)}
-                className="font-semibold bg-linear-to-br text-transparent bg-clip-text from-primary to-primary-foreground"
+                className="transition-colors hover:text-primary"
               >
                 {snippet.title}
               </Link>
@@ -92,8 +98,8 @@ function RenderSnippetList({ snippets }: { snippets: SnippetWithLanguageAndTags[
               {snippet.tagsOnSnippets.length > 0 && (
                 <div className="flex gap-1 mx-1">
                   <Separator orientation="vertical" />
-                  {snippet.tagsOnSnippets.slice(0, 10).map((t) => (
-                    <Badge variant="outline" key={t.tag.id}>
+                  {snippet.tagsOnSnippets.slice(0, 3).map((t) => (
+                    <Badge variant="outline" key={t.tag.id} className="text-xs">
                       <Link
                         href={{
                           pathname: appRoutes.home,
@@ -104,6 +110,9 @@ function RenderSnippetList({ snippets }: { snippets: SnippetWithLanguageAndTags[
                       </Link>
                     </Badge>
                   ))}
+                  {snippet.tagsOnSnippets.length > 3 && (
+                    <Badge variant="outline">+{snippet.tagsOnSnippets.length - 3}</Badge>
+                  )}
                 </div>
               )}
             </div>
@@ -124,7 +133,7 @@ function RenderSnippetList({ snippets }: { snippets: SnippetWithLanguageAndTags[
               className={buttonVariants({ variant: "outline", className: "w-fit" })}
               title={snippet.title}
             >
-              Detailed...
+              View Details
             </Link>
           </div>
         </Card>
