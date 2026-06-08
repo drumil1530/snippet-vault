@@ -9,18 +9,19 @@ import { Language } from "@/generated/prisma/client";
 import { Spinner } from "@/ui/spinner";
 import { Pen } from "lucide-react";
 
-type SnippetUpdateFormProps = {
+type SnippetEditFormProps = {
   id: string;
   snippetData: SnippetWithLanguageAndTags;
   languages: Language[];
 };
 
-export default function SnippetUpdateForm({ id, snippetData, languages }: SnippetUpdateFormProps) {
+export default function SnippetEditForm({ id, snippetData, languages }: SnippetEditFormProps) {
   const initialState: State<SnippetForm> = {
     data: {
       title: snippetData?.title,
       languageId: snippetData?.languageId,
       code: snippetData?.code,
+      description: snippetData.description ?? undefined,
       tags: snippetData.tagsOnSnippets.map((t) => t.tag.name).join(","),
     },
   };
@@ -31,21 +32,19 @@ export default function SnippetUpdateForm({ id, snippetData, languages }: Snippe
     <form action={formAction}>
       <SnippetBaseForm state={state} languages={languages} />
 
-      <div className="mt-2 flex gap-1">
-        <Button type="submit" disabled={isPending}>
-          {isPending ? (
-            <>
-              <Spinner />
-              {"Updating"}
-            </>
-          ) : (
-            <>
-              <Pen />
-              {"Update"}
-            </>
-          )}
-        </Button>
-      </div>
+      <Button type="submit" className="mt-3" disabled={isPending}>
+        {isPending ? (
+          <>
+            <Spinner />
+            {"Updating"}
+          </>
+        ) : (
+          <>
+            <Pen />
+            {"Update"}
+          </>
+        )}
+      </Button>
     </form>
   );
 }

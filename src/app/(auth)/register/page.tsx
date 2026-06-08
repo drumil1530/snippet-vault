@@ -13,8 +13,8 @@ export default function RegisterPage() {
   goToHomeIfLoggedIn();
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <div className="my-4">
+    <div className="max-w-2xl mx-auto space-y-4">
+      <div>
         <h1 className="text-3xl md:text-4xl">Create Account</h1>
 
         <p className="text-muted-foreground">

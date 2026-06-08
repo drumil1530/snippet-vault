@@ -47,7 +47,7 @@ export async function getAllSnippets(filters: z.infer<typeof searchFiltersSchema
     skip: (page - 1) * items,
     orderBy: [orderBy, { id: "desc" }],
     where: whereInput,
-    include: snipppetInclude,
+    include: snippetInclude,
   });
 
   return { snippets, length };
@@ -56,7 +56,14 @@ export async function getAllSnippets(filters: z.infer<typeof searchFiltersSchema
 export async function getSnippet(id: string) {
   return prisma.snippet.findUnique({
     where: { id },
-    include: snipppetInclude,
+    include: snippetInclude,
+  });
+}
+
+export async function getOwnedSnippet(userId: string, id: string) {
+  return prisma.snippet.findUnique({
+    where: { id, userId },
+    include: snippetInclude,
   });
 }
 
@@ -72,7 +79,7 @@ export async function getSnippetMetadata(id: string) {
   });
 }
 
-const snipppetInclude = {
+const snippetInclude = {
   language: true,
   tagsOnSnippets: {
     omit: { tagId: true, snippetId: true },

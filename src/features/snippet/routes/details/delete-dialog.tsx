@@ -9,7 +9,7 @@ import {
   AlertDialogTrigger as Trigger,
 } from "@/ui/alert-dialog";
 import { Button } from "@/ui/button";
-import DeleteButton from "./delete-button";
+import DeleteForm from "./delete-form";
 import { Trash2Icon } from "lucide-react";
 
 export default function DeleteSnippetButton({ id }: { id: string }) {
@@ -31,7 +31,7 @@ export default function DeleteSnippetButton({ id }: { id: string }) {
         </Header>
         <Footer>
           <Cancel>Cancel</Cancel>
-          <DeleteButton id={id} />
+          <DeleteForm id={id} />
         </Footer>
       </Content>
     </AlertDialog>

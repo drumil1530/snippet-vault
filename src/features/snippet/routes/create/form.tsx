@@ -21,21 +21,19 @@ export default function SnippetCreateForm({ languages }: SnippetCreateFormProps)
     <form action={formAction}>
       <SnippetBaseForm state={state} languages={languages} />
 
-      <div className="mt-2">
-        <Button type="submit" className="ms-1" disabled={isPending}>
-          {isPending ? (
-            <>
-              <Spinner />
-              {"Creating"}
-            </>
-          ) : (
-            <>
-              <Plus />
-              {"Create"}
-            </>
-          )}
-        </Button>
-      </div>
+      <Button type="submit" className="mt-3" disabled={isPending}>
+        {isPending ? (
+          <>
+            <Spinner />
+            {"Creating"}
+          </>
+        ) : (
+          <>
+            <Plus />
+            {"Create"}
+          </>
+        )}
+      </Button>
     </form>
   );
 }

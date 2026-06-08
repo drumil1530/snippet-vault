@@ -12,7 +12,7 @@ import { getSession } from "@/features/auth/actions/session";
 
 export default function Navbar() {
   return (
-    <header className="w-full bg-background shadow dark:border-b dark:border-accent mb-3">
+    <header className="w-full bg-background shadow dark:border-b dark:border-accent">
       <nav className="flex justify-between items-center py-3 px-4 md:px-0 w-full max-w-full md:max-w-2xl lg:max-w-4xl xl:max-w-6xl mx-auto">
         <Link href={appRoutes.home} className="text-2xl" title="Snippet Vault">
           Snippets Vault

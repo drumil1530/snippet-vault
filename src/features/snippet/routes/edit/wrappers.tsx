@@ -2,8 +2,10 @@ import AppBreadcrumb from "@/components/custom-ui/breadcrumb";
 import { getAllLanguages } from "@/features/language/actions/get-languages";
 import { appRoutes } from "@/utils/routes";
 import { notFound } from "next/navigation";
-import { getSnippet } from "@/features/snippet/actions";
-import SnippetUpdateForm from "./form";
+import { getOwnedSnippet } from "@/features/snippet/actions";
+import SnippetEditForm from "./form";
+import { getSessionOrRedirect } from "@/utils/session";
+import { getSession } from "@/features/auth/actions/session";
 
 type WrapperProps = {
   params: Promise<{ id: string }>;
@@ -25,10 +27,11 @@ export async function BreadcrumbWrapper({ params }: WrapperProps) {
 
 export async function FormWrapper({ params }: WrapperProps) {
   const { id } = await params;
-  const snippetData = await getSnippet(id);
+  const { user } = getSessionOrRedirect(await getSession());
+  const snippetData = await getOwnedSnippet(user.id, id);
 
   if (!snippetData) notFound();
   const languages = await getAllLanguages();
 
-  return <SnippetUpdateForm id={id} snippetData={snippetData} languages={languages} />;
+  return <SnippetEditForm id={id} snippetData={snippetData} languages={languages} />;
 }

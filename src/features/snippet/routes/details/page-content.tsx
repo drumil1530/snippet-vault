@@ -23,7 +23,7 @@ export default async function SnippetDetail({ params }: { params: Promise<{ id: 
 
   return (
     <Card className="overflow-hidden py-0 gap-0">
-      <CardHeader className="space-y-4 py-5">
+      <CardHeader className="space-y-4 py-4">
         <div className="flex items-start justify-between gap-4">
           <div className="space-y-2">
             <CardTitle className="text-2xl" title={snippet.title}>
@@ -42,7 +42,7 @@ export default async function SnippetDetail({ params }: { params: Promise<{ id: 
             </Badge>
           </div>
 
-          {session && <SnippetActions snippet={snippet} />}
+          {session?.user.id === snippet.userId && <SnippetActions snippet={snippet} />}
         </div>
 
         {tags.length > 0 && (
@@ -63,12 +63,26 @@ export default async function SnippetDetail({ params }: { params: Promise<{ id: 
         )}
       </CardHeader>
 
+      {snippet.description && (
+        <>
+          <Separator />
+
+          <div className="px-5 py-4">
+            <h3 className="font-medium mb-2 text-lg">Description</h3>
+
+            <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+              {snippet.description}
+            </p>
+          </div>
+        </>
+      )}
+
       <Separator />
 
       <CardContent className="relative p-4">
         <CodeBlock
           lang={snippet.language.shikiLang}
-          className="rounded-xl border overflow-hidden [&>pre]:overflow-x-auto"
+          className="rounded-xl border [&>pre]:whitespace-pre [&>pre]:overflow-x-auto [&>pre]:pe-10 scrollbar-thin"
         >
           {snippet.code}
         </CodeBlock>

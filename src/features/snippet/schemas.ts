@@ -10,6 +10,11 @@ export const snippetBaseSchema = z.object({
     error: "Please select proper language from dropdown.",
   }),
   code: z.string().trim().min(1, { error: "Code field should not be empty." }),
+  description: z
+    .string()
+    .trim()
+    .max(500, { error: "Description should be less than 500 characters long." })
+    .optional(),
   tags: z
     .string()
     .trim()

@@ -6,12 +6,9 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 export async function logout() {
-  try {
-    await auth.api.signOut({
-      headers: await headers(),
-    });
-  } catch (error) {
-    console.error(error);
-  }
+  await auth.api.signOut({
+    headers: await headers(),
+  });
+
   redirect(appRoutes.auth.login);
 }

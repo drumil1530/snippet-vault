@@ -32,6 +32,7 @@ import useTagSearch from "@/features/tag/hooks/useTagSearch";
 export interface SnippetForm {
   title?: string;
   code?: string;
+  description?: string;
   languageId?: string;
   tags?: string;
 }
@@ -52,46 +53,61 @@ export function SnippetBaseForm({ state, languages }: SnippetBaseFormProps) {
   const selectedLanguage = languages.find((l) => l.id === state.data?.languageId);
 
   return (
-    <FieldGroup>
-      <Field data-invalid={state.errors?.properties?.title ? true : false}>
-        <FieldLabel htmlFor="title">Title</FieldLabel>
-        <Input
-          id="title"
-          name="title"
-          placeholder="Title of snippet"
-          defaultValue={state.data?.title}
-          aria-invalid={state.errors?.properties?.title ? true : false}
-        />
-        <FieldError>{state.errors?.properties?.title?.errors[0]}</FieldError>
-      </Field>
-      <Field data-invalid={state.errors?.properties?.languageId ? true : false}>
-        <FieldLabel htmlFor="languageId">Language</FieldLabel>
-        <RenderLanguageSelectList
-          isReady={isReady}
-          languages={languages}
-          state={state}
-          selectedLanguage={selectedLanguage}
-        />
-        <FieldError>{state.errors?.properties?.languageId?.errors[0]}</FieldError>
-      </Field>
-      <Field>
-        <FieldLabel htmlFor="tags">Tags</FieldLabel>
-        <RenderTagsCombobox state={state} />
-        <FieldError>{state.errors?.properties?.tags?.errors[0]}</FieldError>
-      </Field>
-      <Field data-invalid={state.errors?.properties?.code ? true : false}>
-        <FieldLabel htmlFor="code">Snippet Code</FieldLabel>
-        <Textarea
-          id="code"
-          name="code"
-          placeholder="Code of snippet"
-          className="font-mono min-h-60"
-          defaultValue={state.data?.code}
-          aria-invalid={state.errors?.properties?.code ? true : false}
-        />
-        <FieldError>{state.errors?.properties?.code?.errors[0]}</FieldError>
-      </Field>
-    </FieldGroup>
+    <>
+      <FieldGroup>
+        <Field data-invalid={state.errors?.properties?.title ? true : false}>
+          <FieldLabel htmlFor="title">Title</FieldLabel>
+          <Input
+            id="title"
+            name="title"
+            placeholder="Title of snippet"
+            defaultValue={state.data?.title}
+            aria-invalid={state.errors?.properties?.title ? true : false}
+          />
+          <FieldError>{state.errors?.properties?.title?.errors[0]}</FieldError>
+        </Field>
+        <Field data-invalid={state.errors?.properties?.title ? true : false}>
+          <FieldLabel htmlFor="code">Description</FieldLabel>
+          <Textarea
+            id="description"
+            name="description"
+            placeholder="Description of snippet"
+            className="font-mono min-h-60"
+            defaultValue={state.data?.description}
+            aria-invalid={state.errors?.properties?.description ? true : false}
+          />
+          <FieldError>{state.errors?.properties?.description?.errors[0]}</FieldError>
+        </Field>
+        <Field data-invalid={state.errors?.properties?.languageId ? true : false}>
+          <FieldLabel htmlFor="languageId">Language</FieldLabel>
+          <RenderLanguageSelectList
+            isReady={isReady}
+            languages={languages}
+            state={state}
+            selectedLanguage={selectedLanguage}
+          />
+          <FieldError>{state.errors?.properties?.languageId?.errors[0]}</FieldError>
+        </Field>
+        <Field>
+          <FieldLabel htmlFor="tags">Tags</FieldLabel>
+          <RenderTagsCombobox state={state} />
+          <FieldError>{state.errors?.properties?.tags?.errors[0]}</FieldError>
+        </Field>
+        <Field data-invalid={state.errors?.properties?.code ? true : false}>
+          <FieldLabel htmlFor="code">Snippet Code</FieldLabel>
+          <Textarea
+            id="code"
+            name="code"
+            placeholder="Code of snippet"
+            className="font-mono min-h-60"
+            defaultValue={state.data?.code}
+            aria-invalid={state.errors?.properties?.code ? true : false}
+          />
+          <FieldError>{state.errors?.properties?.code?.errors[0]}</FieldError>
+        </Field>
+      </FieldGroup>
+      {state.message && <p className="text-destructive mt-2">{state.message}</p>}
+    </>
   );
 }
 
