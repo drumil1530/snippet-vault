@@ -67,6 +67,28 @@ export async function getOwnedSnippet(userId: string, id: string) {
   });
 }
 
+export async function getRecentUserSnippets(userId: string) {
+  return prisma.snippet.findMany({
+    where: { userId },
+    select: {
+      id: true,
+      title: true,
+      description: true,
+      updatedAt: true,
+      language: {
+        select: { name: true },
+      },
+      tagsOnSnippets: {
+        select: {
+          tag: { select: { name: true } },
+        },
+      },
+    },
+    take: 5,
+    orderBy: [{ updatedAt: "desc" }, { id: "desc" }],
+  });
+}
+
 export async function getSnippetMetadata(id: string) {
   return prisma.snippet.findUnique({
     where: { id },
@@ -83,8 +105,7 @@ export async function getSnippetMetadata(id: string) {
 const snippetInclude = {
   language: true,
   tagsOnSnippets: {
-    omit: { tagId: true, snippetId: true },
-    include: { tag: true },
+    select: { tag: true },
   },
 } satisfies SnippetInclude;
 

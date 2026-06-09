@@ -13,4 +13,7 @@ export const appRoutes = {
     login: "/login" as const,
     register: "/register" as const,
   },
+  users: {
+    profile: (username: string) => `/users/${username}` as const,
+  },
 };

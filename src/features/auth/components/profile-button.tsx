@@ -13,7 +13,6 @@ import {
   DropdownMenuTrigger,
 } from "@/ui/dropdown-menu";
 import { appRoutes } from "@/utils/routes";
-import { User as SessionUser } from "better-auth";
 import { LogIn, LogOut, User, UserPlus } from "lucide-react";
 import Link from "next/link";
 import { logout } from "../actions/logout";
@@ -38,13 +37,21 @@ export default function UserMenu({ session }: ProfileButtonProps) {
   );
 }
 
-function LoggedInUserMenu({ user }: { user: SessionUser }) {
+function LoggedInUserMenu({ user }: Pick<AuthSession, "user">) {
   return (
     <DropdownMenuGroup>
       <DropdownMenuLabel className="space-y-1">
         <p className="font-medium">{user.name}</p>
         <p className="text-xs text-muted-foreground">{user.email}</p>
       </DropdownMenuLabel>
+
+      <DropdownMenuSeparator />
+
+      <DropdownMenuItem asChild>
+        <Link href={appRoutes.users.profile(user.username)} className="cursor-pointer">
+          <User /> Profile
+        </Link>
+      </DropdownMenuItem>
 
       <DropdownMenuSeparator />
 
