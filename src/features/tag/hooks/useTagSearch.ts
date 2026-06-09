@@ -22,6 +22,7 @@ export default function useTagSearch() {
   const [debouncedValue] = useDebounce(input, 300);
 
   useEffect(() => {
+    setLoading(true);
     fetchTags(debouncedValue);
   }, [debouncedValue]);
 

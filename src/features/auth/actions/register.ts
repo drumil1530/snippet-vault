@@ -8,6 +8,7 @@ import { registerSchema } from "../schema";
 import z from "zod";
 import { appRoutes } from "@/utils/routes";
 import { redirect } from "next/navigation";
+import prisma from "@/lib/prisma-client";
 
 export async function register(
   _prevState: State<RegisterForm>,
@@ -17,6 +18,17 @@ export async function register(
   const result = registerSchema.safeParse(parsedData);
 
   if (result.success) {
+    const user = await prisma.user.findUnique({
+      where: { username: result.data.username },
+      select: { id: true },
+    });
+
+    if (user)
+      return {
+        message: "User with provided username already exists. User another username.",
+        data: parsedData,
+      };
+
     try {
       await auth.api.signUpEmail({
         body: result.data,

@@ -9,15 +9,19 @@ import { Button } from "@/ui/button";
 import { Spinner } from "@/ui/spinner";
 import { Eye, EyeOff, UserPlusIcon } from "lucide-react";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/ui/input-group";
+import UsernameCheck from "./username-check";
 
 export interface RegisterForm {
   name?: string;
+  username?: string;
   email?: string;
   password?: string;
 }
 
 export default function RegisterForm() {
-  const initialState: State<RegisterForm> = { data: { name: "", email: "", password: "" } };
+  const initialState: State<RegisterForm> = {
+    data: { name: "", username: "", email: "", password: "" },
+  };
   const [state, formAction, isPending] = useActionState(register, initialState);
   const [open, setOpen] = useState(false);
 
@@ -29,12 +33,15 @@ export default function RegisterForm() {
           <Input
             id="name"
             name="name"
-            placeholder="Username"
+            placeholder="Enter your name"
             defaultValue={state.data?.name}
             aria-invalid={state.errors?.properties?.name ? true : false}
           />
           <FieldError>{state.errors?.properties?.name?.errors[0]}</FieldError>
         </Field>
+
+        <UsernameCheck state={state} />
+
         <Field data-invalid={state.errors?.properties?.email ? true : false}>
           <FieldLabel htmlFor="email">Email</FieldLabel>
           <Input
@@ -47,6 +54,7 @@ export default function RegisterForm() {
           />
           <FieldError>{state.errors?.properties?.email?.errors[0]}</FieldError>
         </Field>
+
         <Field data-invalid={state.errors?.properties?.password ? true : false}>
           <FieldLabel htmlFor="password">Password</FieldLabel>
           <InputGroup>
@@ -72,7 +80,9 @@ export default function RegisterForm() {
           <FieldError>{state.errors?.properties?.password?.errors[0]}</FieldError>
         </Field>
       </FieldGroup>
+
       {state.message && <p className="text-destructive mt-2">{state.message}</p>}
+
       <Button type="submit" className="mt-3" disabled={isPending}>
         {isPending ? (
           <>

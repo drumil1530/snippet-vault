@@ -15,5 +15,6 @@ export const appRoutes = {
   },
   users: {
     profile: (username: string) => `/users/${username}` as const,
+    checkUsername: (username: string) => `/api/users/check-username?username=${username}` as const,
   },
 };
