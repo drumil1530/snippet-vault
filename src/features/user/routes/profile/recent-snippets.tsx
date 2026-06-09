@@ -2,7 +2,7 @@ import { getRecentUserSnippets } from "@/features/snippet/actions";
 import { Card, CardContent, CardHeader, CardTitle } from "@/ui/card";
 import Link from "next/link";
 import { Badge } from "@/ui/badge";
-import { appRoutes } from "@/utils/routes";
+import { appRoutes } from "@/lib/routes";
 
 export default async function RecentSnippets({ userId }: { userId: string }) {
   const snippets = await getRecentUserSnippets(userId);

@@ -6,7 +6,7 @@ import {
   SnippetWhereInput,
 } from "@/generated/prisma/models";
 import prisma from "@/lib/prisma-client";
-import { appRoutes } from "@/utils/routes";
+import { appRoutes } from "@/lib/routes";
 import { redirect } from "next/navigation";
 import z from "zod";
 import { searchFiltersSchema } from "@/features/snippet/schemas";

@@ -6,7 +6,7 @@ import { Field, FieldError, FieldLabel } from "@/ui/field";
 import { Input } from "@/ui/input";
 import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
-import { appRoutes } from "@/utils/routes";
+import { appRoutes } from "@/lib/routes";
 import { UsernameCheckResponse } from "@/app/api/users/check-username/route";
 
 export default function UsernameCheck({ state }: { state: State<RegisterForm> }) {

@@ -6,7 +6,7 @@ import { getParsedFormData } from "@/utils/forms";
 import { RegisterForm } from "@/features/auth/routes/register/form";
 import { registerSchema } from "../schema";
 import z from "zod";
-import { appRoutes } from "@/utils/routes";
+import { appRoutes } from "@/lib/routes";
 import { redirect } from "next/navigation";
 import prisma from "@/lib/prisma-client";
 

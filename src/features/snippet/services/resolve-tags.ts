@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma-client";
-import { appRoutes } from "@/utils/routes";
+import { appRoutes } from "@/lib/routes";
 import { redirect } from "next/navigation";
 
 export async function resolveCreateSnippetTags(tagsInput: string[]) {

@@ -8,7 +8,7 @@ import {
   DropdownMenuItem as Item,
   DropdownMenuTrigger as Trigger,
 } from "@/ui/dropdown-menu";
-import { appRoutes } from "@/utils/routes";
+import { appRoutes } from "@/lib/routes";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ButtonGroup, ButtonGroupSeparator } from "@/ui/button-group";
 import { ChevronDownIcon } from "lucide-react";

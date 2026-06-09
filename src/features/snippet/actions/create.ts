@@ -3,7 +3,7 @@
 import prisma from "@/lib/prisma-client";
 import { State } from "@/lib/types/action-state";
 import { getParsedFormData } from "@/utils/forms";
-import { appRoutes } from "@/utils/routes";
+import { appRoutes } from "@/lib/routes";
 import { redirect } from "next/navigation";
 import z from "zod";
 import { SnippetForm } from "@/features/snippet/components";

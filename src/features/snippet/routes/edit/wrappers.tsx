@@ -1,6 +1,6 @@
 import AppBreadcrumb from "@/components/custom-ui/breadcrumb";
 import { getAllLanguages } from "@/features/language/actions/get-languages";
-import { appRoutes } from "@/utils/routes";
+import { appRoutes } from "@/lib/routes";
 import { notFound } from "next/navigation";
 import { getOwnedSnippet } from "@/features/snippet/actions";
 import SnippetEditForm from "./form";

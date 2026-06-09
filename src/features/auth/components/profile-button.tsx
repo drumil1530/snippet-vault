@@ -12,7 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/ui/dropdown-menu";
-import { appRoutes } from "@/utils/routes";
+import { appRoutes } from "@/lib/routes";
 import { LogIn, LogOut, User, UserPlus } from "lucide-react";
 import Link from "next/link";
 import { logout } from "../actions/logout";

@@ -6,7 +6,7 @@ import { getParsedFormData } from "@/utils/forms";
 import { LoginForm } from "@/features/auth/routes/login/form";
 import { loginSchema } from "../schema";
 import z from "zod";
-import { appRoutes } from "@/utils/routes";
+import { appRoutes } from "@/lib/routes";
 import { redirect } from "next/navigation";
 
 export async function login(

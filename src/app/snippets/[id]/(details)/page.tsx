@@ -1,4 +1,4 @@
-import { appRoutes } from "@/utils/routes";
+import { appRoutes } from "@/lib/routes";
 import { Suspense } from "react";
 import { Metadata } from "next";
 import SnippetDetailsPageSkeleton from "@/features/snippet/routes/details/skeleton";

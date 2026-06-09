@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/ui/card";
 import { Separator } from "@/ui/separator";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/ui/dropdown-menu";
 import Link from "next/link";
-import { appRoutes } from "@/utils/routes";
+import { appRoutes } from "@/lib/routes";
 import { Button } from "@/ui/button";
 import DeleteSnippetButton from "./delete-dialog";
 import { Badge } from "@/ui/badge";

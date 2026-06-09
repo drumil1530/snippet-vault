@@ -1,5 +1,5 @@
 import { AuthSession } from "@/lib/auth";
-import { appRoutes } from "@/utils/routes";
+import { appRoutes } from "@/lib/routes";
 import { redirect } from "next/navigation";
 
 export function getSessionOrRedirect(session: AuthSession | null) {

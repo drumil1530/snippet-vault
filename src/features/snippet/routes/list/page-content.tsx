@@ -9,7 +9,7 @@ import {
 } from "@/ui/pagination";
 import Link from "next/link";
 import { Button } from "@/ui/button";
-import { appRoutes } from "@/utils/routes";
+import { appRoutes } from "@/lib/routes";
 import { Separator } from "@/ui/separator";
 import { UrlObject } from "node:url";
 import { ChevronFirstIcon, ChevronLastIcon, ChevronLeftIcon, ChevronRightIcon } from "lucide-react";

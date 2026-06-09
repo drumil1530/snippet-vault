@@ -3,7 +3,7 @@
 import { getSession } from "@/features/auth/actions/session";
 import { cleanupUnusedTags } from "@/features/tag/services/cleanup-tags";
 import prisma from "@/lib/prisma-client";
-import { appRoutes } from "@/utils/routes";
+import { appRoutes } from "@/lib/routes";
 import { getSessionOrRedirect } from "@/utils/session";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";

@@ -1,4 +1,4 @@
-import { appRoutes } from "@/utils/routes";
+import { appRoutes } from "@/lib/routes";
 import { Metadata } from "next";
 import { getAllLanguages } from "@/features/language/actions/get-languages";
 import SnippetCreateForm from "@/features/snippet/routes/create/form";

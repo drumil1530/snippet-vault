@@ -6,7 +6,7 @@ import {
   EmptyDescription as Description,
   EmptyContent as Content,
 } from "@/ui/empty";
-import { appRoutes } from "@/utils/routes";
+import { appRoutes } from "@/lib/routes";
 import Link from "next/link";
 
 export default function NotFoundPage() {

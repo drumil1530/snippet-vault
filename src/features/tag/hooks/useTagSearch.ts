@@ -1,4 +1,4 @@
-import { appRoutes } from "@/utils/routes";
+import { appRoutes } from "@/lib/routes";
 import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
 
