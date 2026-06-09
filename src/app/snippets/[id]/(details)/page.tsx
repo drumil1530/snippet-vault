@@ -20,9 +20,10 @@ export async function generateMetadata(props: PageProps<"/snippets/[id]">): Prom
 
   return {
     title: snippet.title,
-    description: `Code snippet in ${snippet.language.name}`,
+    description: snippet.description || `Code snippet in ${snippet.language.name}`,
   };
 }
+
 export default async function SnippetDetailPage(props: PageProps<"/snippets/[id]">) {
   return (
     <section className="space-y-4">

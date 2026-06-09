@@ -9,9 +9,9 @@ import { createSnippet } from "@/features/snippet/actions";
 import { Spinner } from "@/ui/spinner";
 import { Plus } from "lucide-react";
 
-type SnippetCreateFormProps = {
+interface SnippetCreateFormProps {
   languages: Language[];
-};
+}
 
 export default function SnippetCreateForm({ languages }: SnippetCreateFormProps) {
   const initialState: State<SnippetForm> = {};

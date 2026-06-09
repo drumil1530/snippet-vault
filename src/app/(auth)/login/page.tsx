@@ -1,19 +1,22 @@
 import LoginForm from "@/features/auth/routes/login/form";
 import { appRoutes } from "@/utils/routes";
+import { getSession } from "@/features/auth/actions/session";
 import { goToHomeIfLoggedIn } from "@/utils/session";
 import Link from "next/link";
 import { Metadata } from "next";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Login",
   description: "Sign in to access your snippets and continue where you left off.",
 };
 
-export default function LoginPage() {
-  goToHomeIfLoggedIn();
-
+export default async function LoginPage() {
   return (
     <div className="max-w-2xl mx-auto space-y-4">
+      <Suspense fallback={null}>
+        <AuthCheck />
+      </Suspense>
       <div>
         <h1 className="text-3xl md:text-4xl">Login</h1>
         <p className="text-muted-foreground">
@@ -32,4 +35,9 @@ export default function LoginPage() {
       </p>
     </div>
   );
+}
+
+async function AuthCheck() {
+  goToHomeIfLoggedIn(await getSession());
+  return null;
 }

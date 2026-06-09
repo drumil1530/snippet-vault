@@ -37,10 +37,10 @@ export interface SnippetForm {
   tags?: string;
 }
 
-type SnippetBaseFormProps = {
+interface SnippetBaseFormProps {
   state: State<SnippetForm>;
   languages: Language[];
-};
+}
 
 export function SnippetBaseForm({ state, languages }: SnippetBaseFormProps) {
   const [isReady, setIsReady] = useState(false);
@@ -111,12 +111,12 @@ export function SnippetBaseForm({ state, languages }: SnippetBaseFormProps) {
   );
 }
 
-type LanguageSelectListProps = {
+interface LanguageSelectListProps {
   languages: Language[];
   state: State<SnippetForm>;
   isReady: boolean;
   selectedLanguage?: Language;
-};
+}
 
 function RenderLanguageSelectList(props: LanguageSelectListProps) {
   const { isReady, languages, selectedLanguage, state } = props;
@@ -170,9 +170,9 @@ function RenderLanguageSelectList(props: LanguageSelectListProps) {
   );
 }
 
-type RenderTagsComboboxProps = {
+interface RenderTagsComboboxProps {
   state: State<SnippetForm>;
-};
+}
 
 function RenderTagsCombobox({ state }: RenderTagsComboboxProps) {
   const anchor = useComboboxAnchor();

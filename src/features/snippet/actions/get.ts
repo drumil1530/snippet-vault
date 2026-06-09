@@ -72,6 +72,7 @@ export async function getSnippetMetadata(id: string) {
     where: { id },
     select: {
       title: true,
+      description: true,
       language: {
         select: { name: true },
       },

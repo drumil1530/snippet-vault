@@ -1,8 +1,10 @@
 import RegisterForm from "@/features/auth/routes/register/form";
 import { appRoutes } from "@/utils/routes";
+import { getSession } from "@/features/auth/actions/session";
 import { goToHomeIfLoggedIn } from "@/utils/session";
 import Link from "next/link";
 import { Metadata } from "next";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Create Account",
@@ -10,10 +12,11 @@ export const metadata: Metadata = {
 };
 
 export default function RegisterPage() {
-  goToHomeIfLoggedIn();
-
   return (
     <div className="max-w-2xl mx-auto space-y-4">
+      <Suspense fallback={null}>
+        <AuthCheck />
+      </Suspense>
       <div>
         <h1 className="text-3xl md:text-4xl">Create Account</h1>
 
@@ -30,4 +33,9 @@ export default function RegisterPage() {
       </p>
     </div>
   );
+}
+
+async function AuthCheck() {
+  goToHomeIfLoggedIn(await getSession());
+  return null;
 }

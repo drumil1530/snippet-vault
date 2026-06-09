@@ -7,9 +7,9 @@ import SnippetEditForm from "./form";
 import { getSessionOrRedirect } from "@/utils/session";
 import { getSession } from "@/features/auth/actions/session";
 
-type WrapperProps = {
+interface WrapperProps {
   params: Promise<{ id: string }>;
-};
+}
 
 export async function BreadcrumbWrapper({ params }: WrapperProps) {
   const { id } = await params;

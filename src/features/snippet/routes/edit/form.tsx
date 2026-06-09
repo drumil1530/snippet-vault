@@ -9,11 +9,11 @@ import { Language } from "@/generated/prisma/client";
 import { Spinner } from "@/ui/spinner";
 import { Pen } from "lucide-react";
 
-type SnippetEditFormProps = {
+interface SnippetEditFormProps {
   id: string;
   snippetData: SnippetWithLanguageAndTags;
   languages: Language[];
-};
+}
 
 export default function SnippetEditForm({ id, snippetData, languages }: SnippetEditFormProps) {
   const initialState: State<SnippetForm> = {

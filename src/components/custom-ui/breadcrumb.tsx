@@ -9,10 +9,10 @@ import {
 import Link from "next/link";
 import { Fragment } from "react";
 
-type AppBreadcrumbProps = {
+interface AppBreadcrumbProps {
   links: { href: string; label: string }[];
   page: string;
-};
+}
 
 export default function AppBreadcrumb(props: AppBreadcrumbProps) {
   return (

@@ -8,7 +8,10 @@ import { Check, Copy } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
-type CopyButtonProps = { code: string; className?: ClassValue };
+interface CopyButtonProps {
+  code: string;
+  className?: ClassValue;
+}
 
 export function CodeCopyButton({ code, className }: CopyButtonProps) {
   const [clicked, setClicked] = useState<boolean>(false);

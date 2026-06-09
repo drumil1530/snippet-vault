@@ -24,10 +24,10 @@ import { CodeBlock, CodeBlockSkeleton, CodeCopyButton } from "@/features/snippet
 import { searchFiltersSchema } from "@/features/snippet/schemas";
 import { SearchFilterParams } from "@/features/snippet/constants";
 
-type SnippetListProps = {
+interface SnippetListProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
   languages: Language[];
-};
+}
 
 export default async function SnippetsList({ searchParams, languages }: SnippetListProps) {
   const result = searchFiltersSchema.safeParse(await searchParams);

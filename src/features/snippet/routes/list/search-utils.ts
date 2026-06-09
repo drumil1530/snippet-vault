@@ -4,11 +4,11 @@ import { SearchFilterParams } from "@/features/snippet/constants";
 import { setOrDeleteParam } from "@/utils/search-params";
 import { searchFiltersSchema } from "../../schemas";
 
-export type SearchFilters = {
+export interface SearchFilters {
   query: string;
   language: ComboboxItem | null;
   tags: string[];
-};
+}
 
 export function parseSearchFilters(
   searchParams: ReadonlyURLSearchParams,
