@@ -139,4 +139,8 @@
   *:focus-visible {
     @apply outline-0;
   }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
 }

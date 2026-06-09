@@ -16,7 +16,7 @@ interface AppBreadcrumbProps {
 
 export default function AppBreadcrumb(props: AppBreadcrumbProps) {
   return (
-    <Breadcrumb className="mb-2">
+    <Breadcrumb className="mb-3">
       <BreadcrumbList>
         {props.links.map((link, i) => (
           <Fragment key={i}>

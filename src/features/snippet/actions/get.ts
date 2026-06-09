@@ -47,7 +47,12 @@ export async function getAllSnippets(filters: z.infer<typeof searchFiltersSchema
     skip: (page - 1) * items,
     orderBy: [orderBy, { id: "desc" }],
     where: whereInput,
-    include: snippetInclude,
+    include: {
+      ...snippetInclude,
+      user: {
+        select: { username: true },
+      },
+    },
   });
 
   return { snippets, length };
@@ -56,7 +61,12 @@ export async function getAllSnippets(filters: z.infer<typeof searchFiltersSchema
 export async function getSnippet(id: string) {
   return prisma.snippet.findUnique({
     where: { id },
-    include: snippetInclude,
+    include: {
+      ...snippetInclude,
+      user: {
+        select: { username: true },
+      },
+    },
   });
 }
 

@@ -5,13 +5,14 @@ import { Separator } from "@/ui/separator";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/ui/dropdown-menu";
 import Link from "next/link";
 import { appRoutes } from "@/utils/routes";
-import { buttonVariants } from "@/ui/button";
+import { Button } from "@/ui/button";
 import DeleteSnippetButton from "./delete-dialog";
 import { Badge } from "@/ui/badge";
 import { EllipsisVertical, PenIcon } from "lucide-react";
 import { CodeBlock, CodeCopyButton } from "@/features/snippet/components";
 import { SearchFilterParams } from "@/features/snippet/constants";
 import { getSession } from "@/features/auth/actions/session";
+import AppTooltip from "@/components/custom-ui/tooltip";
 
 export default async function SnippetDetail({ params }: { params: Promise<{ id: string }> }) {
   const session = await getSession();
@@ -23,27 +24,21 @@ export default async function SnippetDetail({ params }: { params: Promise<{ id: 
 
   return (
     <Card className="overflow-hidden py-0 gap-0">
-      <CardHeader className="space-y-4 py-4">
+      <CardHeader className="space-y-3 py-4">
         <div className="flex items-start justify-between gap-4">
-          <div className="space-y-2">
-            <CardTitle className="text-2xl" title={snippet.title}>
-              {snippet.title}
-            </CardTitle>
-
-            <Badge variant="secondary" className="w-fit font-mono">
-              <Link
-                href={{
-                  pathname: appRoutes.home,
-                  query: { [SearchFilterParams.LANGUAGE]: snippet.language.slug },
-                }}
-              >
-                {snippet.language.name}
-              </Link>
-            </Badge>
-          </div>
+          <CardTitle className="text-2xl" title={snippet.title}>
+            {snippet.title}
+          </CardTitle>
 
           {session?.user.id === snippet.userId && <SnippetActions snippet={snippet} />}
         </div>
+
+        <Link
+          href={appRoutes.users.profile(snippet.user.username)}
+          className="w-fit text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+        >
+          @{snippet.user.username}
+        </Link>
 
         {tags.length > 0 && (
           <div className="flex flex-wrap gap-2">
@@ -79,15 +74,28 @@ export default async function SnippetDetail({ params }: { params: Promise<{ id: 
 
       <Separator />
 
-      <CardContent className="relative p-4">
-        <CodeBlock
-          lang={snippet.language.shikiLang}
-          className="rounded-xl border [&>pre]:whitespace-pre [&>pre]:overflow-x-auto [&>pre]:pe-10 scrollbar-thin"
-        >
-          {snippet.code}
-        </CodeBlock>
-
-        <CodeCopyButton code={snippet.code} className="top-5 right-5" />
+      <CardContent className="p-4">
+        <div className=" rounded-xl border overflow-clip">
+          <div className="flex justify-between items-center px-3 pt-3">
+            <Badge variant="secondary" className="w-fit font-mono">
+              <Link
+                href={{
+                  pathname: appRoutes.home,
+                  query: { [SearchFilterParams.LANGUAGE]: snippet.language.slug },
+                }}
+              >
+                {snippet.language.name}
+              </Link>
+            </Badge>
+            <CodeCopyButton code={snippet.code} className="static" />
+          </div>
+          <CodeBlock
+            lang={snippet.language.shikiLang}
+            className="[&>pre]:whitespace-pre [&>pre]:overflow-x-auto scrollbar-thin"
+          >
+            {snippet.code}
+          </CodeBlock>
+        </div>
       </CardContent>
     </Card>
   );
@@ -97,23 +105,20 @@ function SnippetActions({ snippet }: { snippet: SnippetWithLanguageAndTags }) {
   return (
     <div className="flex items-center gap-1">
       <DropdownMenu>
-        <DropdownMenuTrigger
-          className={buttonVariants({
-            variant: "secondary",
-            size: "icon",
-          })}
-        >
-          <EllipsisVertical className="size-5" />
-        </DropdownMenuTrigger>
+        <AppTooltip content="Edit/Delete">
+          <DropdownMenuTrigger asChild>
+            <Button variant="secondary" size="icon">
+              <EllipsisVertical className="size-5" />
+            </Button>
+          </DropdownMenuTrigger>
+        </AppTooltip>
 
         <DropdownMenuContent align="end" className="w-fit min-w-24 flex flex-col gap-1">
-          <Link
-            href={appRoutes.snippets.edit(snippet.id)}
-            className={buttonVariants({ variant: "secondary" })}
-          >
-            <PenIcon />
-            Edit
-          </Link>
+          <Button asChild variant="secondary">
+            <Link href={appRoutes.snippets.edit(snippet.id)}>
+              <PenIcon /> Edit
+            </Link>
+          </Button>
 
           <DeleteSnippetButton id={snippet.id} />
         </DropdownMenuContent>

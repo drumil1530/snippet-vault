@@ -2,7 +2,7 @@
 
 import AppTooltip from "@/components/custom-ui/tooltip";
 import { AuthSession } from "@/lib/auth";
-import { buttonVariants } from "@/ui/button";
+import { Button } from "@/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,8 +26,10 @@ export default function UserMenu({ session }: ProfileButtonProps) {
   return (
     <DropdownMenu>
       <AppTooltip content="Profile">
-        <DropdownMenuTrigger className={buttonVariants({ variant: "outline", size: "icon" })}>
-          {session?.user.name.charAt(0).toUpperCase() ?? <User className="size-4" />}
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline" size="icon">
+            {session?.user.name.charAt(0).toUpperCase() ?? <User className="size-4" />}
+          </Button>
         </DropdownMenuTrigger>
       </AppTooltip>
       <DropdownMenuContent align="end" className="min-w-fit">

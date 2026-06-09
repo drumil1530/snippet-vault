@@ -8,7 +8,7 @@ import {
   PaginationPrevious,
 } from "@/ui/pagination";
 import Link from "next/link";
-import { Button, buttonVariants } from "@/ui/button";
+import { Button } from "@/ui/button";
 import { appRoutes } from "@/utils/routes";
 import { Separator } from "@/ui/separator";
 import { UrlObject } from "node:url";
@@ -79,7 +79,7 @@ function RenderSnippetList({ snippets }: { snippets: SnippetWithLanguageAndTags[
             >
               <Link
                 href={appRoutes.snippets.details(snippet.id)}
-                className="transition-colors hover:text-primary"
+                className="underline underline-offset-3 decoration-current/0 hover:decoration-current transition-all"
               >
                 {snippet.title}
               </Link>
@@ -124,17 +124,20 @@ function RenderSnippetList({ snippets }: { snippets: SnippetWithLanguageAndTags[
                 {snippet.code.slice(0, 180)}
               </CodeBlock>
             </Suspense>
-            <CodeCopyButton code={snippet.code} />
+            <CodeCopyButton code={snippet.code} className="right-4" />
             <div className="w-full absolute bottom-0 left-0 bg-linear-to-b from-card/0 to-card h-18" />
           </CardContent>
-          <div className="flex justify-end p-3">
+          <div className="flex items-center justify-between py-3 px-4">
             <Link
-              href={appRoutes.snippets.details(snippet.id)}
-              className={buttonVariants({ variant: "outline", className: "w-fit" })}
-              title={snippet.title}
+              href={appRoutes.users.profile(snippet.user.username)}
+              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
             >
-              View Details
+              @{snippet.user.username}
             </Link>
+
+            <Button asChild variant="outline">
+              <Link href={appRoutes.snippets.details(snippet.id)}>View Details</Link>
+            </Button>
           </div>
         </Card>
       ))}

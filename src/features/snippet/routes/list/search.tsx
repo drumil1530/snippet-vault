@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, buttonVariants } from "@/ui/button";
+import { Button } from "@/ui/button";
 import {
   Combobox,
   ComboboxContent as Content,
@@ -96,7 +96,7 @@ export default function SnippetSearch({ languages }: { languages: Language[] }) 
               <Search />
             </InputGroupAddon>
           </InputGroup>
-          <Button type="submit" className="cursor-pointer min-w-24">
+          <Button type="submit" className="min-w-24">
             <Search /> Search
           </Button>
         </div>
@@ -130,7 +130,7 @@ export default function SnippetSearch({ languages }: { languages: Language[] }) 
           </div>
 
           <div className="flex justify-end gap-1">
-            <Button type="reset" variant="ghost" onClick={handleReset} className="cursor-pointer">
+            <Button type="reset" variant="ghost" onClick={handleReset}>
               <EraserIcon /> Reset
             </Button>
             <ItemsButtonDropdown />
@@ -200,14 +200,10 @@ function CollapsibleContainer(props: { children: ReactNode; isOpen: boolean }) {
       className="flex flex-col justify-start items-end gap-1.5"
     >
       <AppTooltip content="Search" side="left">
-        <CollapsibleTrigger
-          className={buttonVariants({
-            variant: "outline",
-            size: "icon",
-            className: "*:size-1.5",
-          })}
-        >
-          {isOpen ? <ChevronUp /> : <ChevronDown />}
+        <CollapsibleTrigger asChild>
+          <Button variant="outline" size="icon" className="*:size-1.5">
+            {isOpen ? <ChevronUp /> : <ChevronDown />}
+          </Button>
         </CollapsibleTrigger>
       </AppTooltip>
       <CollapsibleContent className="w-full mt-1">{props.children}</CollapsibleContent>

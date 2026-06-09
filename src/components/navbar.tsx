@@ -1,7 +1,7 @@
 import { appRoutes } from "@/utils/routes";
 import Link from "next/link";
 import { ThemeToggle } from "./theme/theme-toggle";
-import { buttonVariants } from "@/ui/button";
+import { Button } from "@/ui/button";
 import { LogIn, PlusIcon } from "lucide-react";
 import UserMenu from "@/features/auth/components/profile-button";
 import { Skeleton } from "./ui/skeleton";
@@ -42,10 +42,12 @@ async function NavbarAuth() {
 function LoggedInNavbar({ session }: { session: AuthSession }) {
   return (
     <>
-      <Link href={appRoutes.snippets.new} className={buttonVariants()}>
-        <PlusIcon />
-        New
-      </Link>
+      <Button asChild>
+        <Link href={appRoutes.snippets.new}>
+          <PlusIcon />
+          New
+        </Link>
+      </Button>
 
       <UserMenu session={session} />
     </>
@@ -56,21 +58,18 @@ function LoggedOutNavbar() {
   return (
     <>
       <DropdownMenu>
-        <DropdownMenuTrigger className={buttonVariants()}>
-          <PlusIcon /> New
+        <DropdownMenuTrigger asChild>
+          <Button>
+            <PlusIcon /> New
+          </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="min-w-52 space-y-3 p-4 justify-center">
           <p className="text-center">You need to be logged in to create a snippet.</p>
-          <Link
-            href={appRoutes.auth.login}
-            className={buttonVariants({
-              variant: "secondary",
-              size: "lg",
-              className: "w-full",
-            })}
-          >
-            <LogIn /> Login
-          </Link>
+          <Button asChild variant="secondary" size="lg" className="w-full">
+            <Link href={appRoutes.auth.login}>
+              <LogIn /> Login
+            </Link>
+          </Button>
         </DropdownMenuContent>
       </DropdownMenu>
 

@@ -20,7 +20,7 @@ export default async function RecentSnippets({ userId }: { userId: string }) {
   return (
     <div className="space-y-4">
       {snippets.map((snippet) => (
-        <Card key={snippet.id}>
+        <Card key={snippet.id} className="transition-all duration-200 hover:-translate-y-1">
           <CardHeader className="gap-2">
             <div className="flex items-center justify-between gap-4">
               <CardTitle className="text-lg">
