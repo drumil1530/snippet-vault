@@ -50,7 +50,7 @@ function LoggedInUserMenu({ user }: Pick<AuthSession, "user">) {
       <DropdownMenuSeparator />
 
       <DropdownMenuItem asChild>
-        <Link href={appRoutes.users.profile(user.username)} className="cursor-pointer">
+        <Link href={appRoutes.users(user.username).profile} className="cursor-pointer">
           <User /> Profile
         </Link>
       </DropdownMenuItem>

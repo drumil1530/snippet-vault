@@ -59,8 +59,8 @@ export async function updateSnippet(
       cleanupUnusedTags(),
     ]);
 
-    revalidatePath(appRoutes.snippets.details(id));
-    redirect(appRoutes.snippets.details(id));
+    revalidatePath(appRoutes.snippets.item(id).details);
+    redirect(appRoutes.snippets.item(id).details);
   } else {
     return {
       errors: z.treeifyError(result.error),

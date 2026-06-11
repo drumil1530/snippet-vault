@@ -5,7 +5,7 @@ import { useDebounce } from "use-debounce";
 export default function useTagSearch() {
   async function fetchTags(value: string) {
     try {
-      const res = await fetch(appRoutes.tags.search(value));
+      const res = await fetch(appRoutes.api.tags.search(value));
       const data = await res.json();
 
       if (Array.isArray(data)) setTags(data);

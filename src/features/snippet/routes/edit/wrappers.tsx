@@ -18,7 +18,7 @@ export async function BreadcrumbWrapper({ params }: WrapperProps) {
     <AppBreadcrumb
       links={[
         { href: appRoutes.home, label: "Home" },
-        { href: appRoutes.snippets.details(id), label: "Snippet Details" },
+        { href: appRoutes.snippets.item(id).details, label: "Snippet Details" },
       ]}
       page="Edit Snippet"
     />

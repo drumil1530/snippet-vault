@@ -19,7 +19,7 @@ import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { Badge } from "@/ui/badge";
 import z from "zod";
-import { getAllSnippets, SnippetWithLanguageAndTags } from "@/features/snippet/actions";
+import { getAllSnippets, SnippetWithData } from "@/features/snippet/actions";
 import { CodeBlock, CodeBlockSkeleton, CodeCopyButton } from "@/features/snippet/components";
 import { searchFiltersSchema } from "@/features/snippet/schemas";
 import { SearchFilterParams } from "@/features/snippet/constants";
@@ -64,7 +64,7 @@ export default async function SnippetsList({ searchParams, languages }: SnippetL
   );
 }
 
-function RenderSnippetList({ snippets }: { snippets: SnippetWithLanguageAndTags[] }) {
+function RenderSnippetList({ snippets }: { snippets: SnippetWithData[] }) {
   return (
     <div className="grid gap-3 grid-cols-[repeat(auto-fit,minmax(20rem,1fr))]">
       {snippets.map((snippet) => (
@@ -78,7 +78,7 @@ function RenderSnippetList({ snippets }: { snippets: SnippetWithLanguageAndTags[
               title={snippet.title}
             >
               <Link
-                href={appRoutes.snippets.details(snippet.id)}
+                href={appRoutes.snippets.item(snippet.id).details}
                 className="underline underline-offset-3 decoration-current/0 hover:decoration-current transition-all"
               >
                 {snippet.title}
@@ -129,14 +129,14 @@ function RenderSnippetList({ snippets }: { snippets: SnippetWithLanguageAndTags[
           </CardContent>
           <div className="flex items-center justify-between py-3 px-4">
             <Link
-              href={appRoutes.users.profile(snippet.user.username)}
+              href={appRoutes.users(snippet.user.username).profile}
               className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
             >
               @{snippet.user.username}
             </Link>
 
             <Button asChild variant="outline">
-              <Link href={appRoutes.snippets.details(snippet.id)}>View Details</Link>
+              <Link href={appRoutes.snippets.item(snippet.id).details}>View Details</Link>
             </Button>
           </div>
         </Card>

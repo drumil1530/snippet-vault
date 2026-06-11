@@ -1,20 +1,33 @@
 export const appRoutes = {
   home: "/snippets" as const,
+
   snippets: {
-    new: `/snippets/new` as const,
-    details: (id: string) => `/snippets/${id}` as const,
-    edit: (id: string) => `/snippets/${id}/edit` as const,
-    editFavorite: (id: string) => `/snippets/${id}/edit/favorite` as const,
+    new: "/snippets/new" as const,
+
+    item: (id: string) => ({
+      details: `/snippets/${id}` as const,
+      edit: `/snippets/${id}/edit` as const,
+    }),
   },
-  tags: {
-    search: (query: string) => `/tags?query=${query}` as const,
-  },
+
+  users: (username: string) => ({
+    profile: `/users/${username}` as const,
+    snippets: `/users/${username}/snippets` as const,
+  }),
+
   auth: {
     login: "/login" as const,
     register: "/register" as const,
   },
-  users: {
-    profile: (username: string) => `/users/${username}` as const,
-    checkUsername: (username: string) => `/api/users/check-username?username=${username}` as const,
+
+  api: {
+    tags: {
+      search: (query: string) => `/api/tags/search?query=${query}` as const,
+    },
+
+    users: {
+      checkUsername: (username: string) =>
+        `/api/users/check-username?username=${username}` as const,
+    },
   },
 };

@@ -24,7 +24,10 @@ export default async function RecentSnippets({ userId }: { userId: string }) {
           <CardHeader className="gap-2">
             <div className="flex items-center justify-between gap-4">
               <CardTitle className="text-lg">
-                <Link href={appRoutes.snippets.details(snippet.id)} className="hover:underline">
+                <Link
+                  href={appRoutes.snippets.item(snippet.id).details}
+                  className="hover:underline"
+                >
                   {snippet.title}
                 </Link>
               </CardTitle>

@@ -12,7 +12,7 @@ import { UsernameCheckResponse } from "@/app/api/users/check-username/route";
 export default function UsernameCheck({ state }: { state: State<RegisterForm> }) {
   async function checkUsername(value: string) {
     try {
-      const res = await fetch(appRoutes.users.checkUsername(value));
+      const res = await fetch(appRoutes.api.users.checkUsername(value));
       const data: UsernameCheckResponse = await res.json();
 
       if (data.valid) {

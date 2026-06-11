@@ -119,4 +119,5 @@ const snippetInclude = {
   },
 } satisfies SnippetInclude;
 
-export type SnippetWithLanguageAndTags = NonNullable<Awaited<ReturnType<typeof getSnippet>>>;
+export type SnippetWithData = NonNullable<Awaited<ReturnType<typeof getSnippet>>>;
+export type SnippetWithUser = NonNullable<Awaited<ReturnType<typeof getOwnedSnippet>>>;

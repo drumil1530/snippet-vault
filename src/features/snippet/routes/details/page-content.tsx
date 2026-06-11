@@ -1,4 +1,4 @@
-import { getSnippet, SnippetWithLanguageAndTags } from "@/features/snippet/actions";
+import { getSnippet, SnippetWithData } from "@/features/snippet/actions";
 import { notFound } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/ui/card";
 import { Separator } from "@/ui/separator";
@@ -34,7 +34,7 @@ export default async function SnippetDetail({ params }: { params: Promise<{ id: 
         </div>
 
         <Link
-          href={appRoutes.users.profile(snippet.user.username)}
+          href={appRoutes.users(snippet.user.username).profile}
           className="w-fit text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
         >
           @{snippet.user.username}
@@ -101,7 +101,7 @@ export default async function SnippetDetail({ params }: { params: Promise<{ id: 
   );
 }
 
-function SnippetActions({ snippet }: { snippet: SnippetWithLanguageAndTags }) {
+function SnippetActions({ snippet }: { snippet: SnippetWithData }) {
   return (
     <div className="flex items-center gap-1">
       <DropdownMenu>
@@ -115,7 +115,7 @@ function SnippetActions({ snippet }: { snippet: SnippetWithLanguageAndTags }) {
 
         <DropdownMenuContent align="end" className="w-fit min-w-24 flex flex-col gap-1">
           <Button asChild variant="secondary">
-            <Link href={appRoutes.snippets.edit(snippet.id)}>
+            <Link href={appRoutes.snippets.item(snippet.id).edit}>
               <PenIcon /> Edit
             </Link>
           </Button>
