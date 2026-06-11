@@ -2,6 +2,7 @@ import { getAllLanguages } from "@/features/language/actions/get-languages";
 import SnippetsList from "@/features/snippet/routes/list/page-content";
 import SnippetSearch from "@/features/snippet/routes/list/search";
 import { SnippetsListSkeleton } from "@/features/snippet/routes/list/skeleton";
+import { appRoutes } from "@/lib/routes";
 import { Button } from "@/ui/button";
 import { Metadata } from "next";
 import { Suspense } from "react";
@@ -23,7 +24,7 @@ export default async function SnippetsPage(props: PageProps<"/snippets">) {
 
       <div className="w-full -mt-8.5 mb-2">
         <Suspense fallback={<Button value="Loading" variant="outline" />}>
-          <SnippetSearch languages={languages} />
+          <SnippetSearch languages={languages} route={appRoutes.home} />
         </Suspense>
       </div>
       <div className="py-2">

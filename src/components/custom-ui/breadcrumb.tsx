@@ -7,10 +7,15 @@ import {
   BreadcrumbPage,
 } from "@/ui/breadcrumb";
 import Link from "next/link";
-import { Fragment } from "react";
+import { Fragment, ReactNode } from "react";
+
+type BreadcrumbLinkItem = {
+  href?: string;
+  label: ReactNode;
+};
 
 interface AppBreadcrumbProps {
-  links: { href: string; label: string }[];
+  links: BreadcrumbLinkItem[];
   page: string;
 }
 
@@ -21,9 +26,13 @@ export default function AppBreadcrumb(props: AppBreadcrumbProps) {
         {props.links.map((link, i) => (
           <Fragment key={i}>
             <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link href={link.href}>{link.label}</Link>
-              </BreadcrumbLink>
+              {link.href ? (
+                <BreadcrumbLink asChild>
+                  <Link href={link.href}>{link.label}</Link>
+                </BreadcrumbLink>
+              ) : (
+                link.label
+              )}
             </BreadcrumbItem>
 
             <BreadcrumbSeparator />

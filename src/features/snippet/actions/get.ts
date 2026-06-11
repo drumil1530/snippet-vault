@@ -11,10 +11,13 @@ import { redirect } from "next/navigation";
 import z from "zod";
 import { searchFiltersSchema } from "@/features/snippet/schemas";
 
-export async function getAllSnippets(filters: z.infer<typeof searchFiltersSchema>) {
+type SearchFilters = z.infer<typeof searchFiltersSchema>;
+
+async function resolveSearchFilters(filters: SearchFilters, userId?: string) {
   const { page, sortBy, items, query, language, tags } = filters;
 
   const whereInput = {
+    ...(userId && { userId }),
     ...(query && {
       OR: [
         { title: { contains: query, mode: "insensitive" } },
@@ -41,6 +44,12 @@ export async function getAllSnippets(filters: z.infer<typeof searchFiltersSchema
     newest: { updatedAt: "desc" as const },
     oldest: { updatedAt: "asc" as const },
   }[sortBy] satisfies SnippetOrderByWithRelationInput;
+
+  return { whereInput, page, items, orderBy, length };
+}
+
+export async function getAllSnippets(filters: SearchFilters) {
+  const { whereInput, page, items, orderBy, length } = await resolveSearchFilters(filters);
 
   const snippets = await prisma.snippet.findMany({
     take: items,
@@ -73,7 +82,12 @@ export async function getSnippet(id: string) {
 export async function getOwnedSnippet(userId: string, id: string) {
   return prisma.snippet.findUnique({
     where: { id, userId },
-    include: snippetInclude,
+    include: {
+      ...snippetInclude,
+      user: {
+        select: { username: true },
+      },
+    },
   });
 }
 
@@ -99,6 +113,21 @@ export async function getRecentUserSnippets(userId: string) {
   });
 }
 
+export async function getUserSnippets(userId: string, filters: SearchFilters) {
+  const { whereInput, page, items, orderBy, length } = await resolveSearchFilters(filters, userId);
+
+  const snippets = await prisma.snippet.findMany({
+    where: whereInput,
+
+    include: snippetInclude,
+    take: items,
+    skip: (page - 1) * items,
+    orderBy: [orderBy, { id: "desc" }],
+  });
+
+  return { snippets, length };
+}
+
 export async function getSnippetMetadata(id: string) {
   return prisma.snippet.findUnique({
     where: { id },
@@ -119,5 +148,8 @@ const snippetInclude = {
   },
 } satisfies SnippetInclude;
 
-export type SnippetWithData = NonNullable<Awaited<ReturnType<typeof getSnippet>>>;
-export type SnippetWithUser = NonNullable<Awaited<ReturnType<typeof getOwnedSnippet>>>;
+export type SnippetWithData = Omit<NonNullable<Awaited<ReturnType<typeof getSnippet>>>, "user"> & {
+  user?: {
+    username: string;
+  };
+};

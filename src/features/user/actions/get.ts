@@ -15,3 +15,7 @@ export async function getPublicUser(username: string) {
     },
   });
 }
+
+export async function checkUserExistance(username: string) {
+  return prisma.user.findUnique({ where: { username }, select: { id: true } });
+}

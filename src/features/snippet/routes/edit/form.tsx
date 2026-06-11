@@ -1,6 +1,6 @@
 "use client";
 
-import { SnippetWithUser, updateSnippet } from "@/features/snippet/actions";
+import { SnippetWithData, updateSnippet } from "@/features/snippet/actions";
 import { SnippetBaseForm, SnippetForm } from "@/features/snippet/components";
 import { Button } from "@/ui/button";
 import { State } from "@/lib/types/action-state";
@@ -11,7 +11,7 @@ import { Pen } from "lucide-react";
 
 interface SnippetEditFormProps {
   id: string;
-  snippetData: SnippetWithUser;
+  snippetData: SnippetWithData;
   languages: Language[];
 }
 

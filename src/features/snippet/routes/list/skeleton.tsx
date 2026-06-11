@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader } from "@/ui/card";
 import { Separator } from "@/ui/separator";
 import { Skeleton } from "@/ui/skeleton";
 
-function SnippetSkeletonCard() {
+export function SnippetCardSkeleton() {
   return (
     <Card className="w-full cursor-progress">
       <CardHeader className="gap-2">
@@ -21,12 +21,12 @@ export function SnippetsListSkeleton() {
   return (
     <>
       <div className="grid gap-3 grid-cols-[repeat(auto-fit,minmax(20rem,1fr))]">
-        <SnippetSkeletonCard />
-        <SnippetSkeletonCard />
-        <SnippetSkeletonCard />
-        <SnippetSkeletonCard />
-        <SnippetSkeletonCard />
-        <SnippetSkeletonCard />
+        <SnippetCardSkeleton />
+        <SnippetCardSkeleton />
+        <SnippetCardSkeleton />
+        <SnippetCardSkeleton />
+        <SnippetCardSkeleton />
+        <SnippetCardSkeleton />
       </div>
       <div className="max-w-60 mx-auto mt-4 mb-2">
         <Skeleton className="w-full h-9" />

@@ -15,7 +15,6 @@ import {
   useComboboxAnchor,
 } from "@/ui/combobox";
 import { Language } from "@/generated/prisma/client";
-import { appRoutes } from "@/lib/routes";
 import { useSearchParams, useRouter } from "next/navigation";
 import {
   Dispatch,
@@ -36,7 +35,12 @@ import useTagSearch from "@/features/tag/hooks/useTagSearch";
 import AppTooltip from "@/components/custom-ui/tooltip";
 import { SearchFilterParams } from "../../constants";
 
-export default function SnippetSearch({ languages }: { languages: Language[] }) {
+interface SnippetSearchProps {
+  languages: Language[];
+  route: string;
+}
+
+export default function SnippetSearch({ languages, route }: SnippetSearchProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -64,7 +68,7 @@ export default function SnippetSearch({ languages }: { languages: Language[] }) 
     e.preventDefault();
     const params = new URLSearchParams(searchParams);
 
-    router.push(appRoutes.home + "?" + buildSearchParams(filters, params));
+    router.push(route + "?" + buildSearchParams(filters, params));
   }
 
   function handleReset() {

@@ -8,14 +8,15 @@ import {
   DropdownMenuItem as Item,
   DropdownMenuTrigger as Trigger,
 } from "@/ui/dropdown-menu";
-import { appRoutes } from "@/lib/routes";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ButtonGroup, ButtonGroupSeparator } from "@/ui/button-group";
 import { ChevronDownIcon } from "lucide-react";
 
 export default function ItemsButtonDropdown() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const pathname = usePathname();
+
   const params = new URLSearchParams(searchParams.toString());
 
   const pageItems = params.get("items") || 6;
@@ -28,7 +29,7 @@ export default function ItemsButtonDropdown() {
     params.delete("page");
     setItems(newItemsNumber);
 
-    router.push(appRoutes.home + "?" + params.toString());
+    router.push(pathname + "?" + params.toString());
   }
 
   return (

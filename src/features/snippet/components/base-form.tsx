@@ -72,7 +72,7 @@ export function SnippetBaseForm({ state, languages }: SnippetBaseFormProps) {
             id="description"
             name="description"
             placeholder="Description of snippet"
-            className="font-mono min-h-60"
+            className="font-mono min-h-30"
             defaultValue={state.data?.description}
             aria-invalid={state.errors?.properties?.description ? true : false}
           />
